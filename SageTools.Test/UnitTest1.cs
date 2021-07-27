@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using SageTools.Extension;
 using Xunit;
 
-namespace Ezreal.Tools.Test
+namespace SageTools.Test
 {
     public class UnitTest1
     {
@@ -28,7 +30,14 @@ namespace Ezreal.Tools.Test
         [Fact]
         public void Test()
         {
-            Convert.ToInt32("asdfasdfasd");
+            var list = new List<string>();
+            for (int i = 0; i < 100000000; i++)
+            {
+                list.Add(SageTools.Utils.ShortIdGen.NextId());
+            }
+            var list2 = list.Distinct().ToList();
+
+            Assert.True(list.Count==list2.Count);
         }
     }
 }

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ezreal.Tools\SageTools.csproj" />
+    <ProjectReference Include="..\SageTools\SageTools.csproj" />
   </ItemGroup>
 
 </Project>
