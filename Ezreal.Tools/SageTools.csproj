@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>LiuDanK</Authors>
+    <Company>LiuDanK</Company>
+    <Description>常用工具类、拓展方法等封装，目前还在实现中</Description>
+    <Copyright>Copyright © LiuDanK 2021</Copyright>
+    <Version>0.0.2</Version>
+  </PropertyGroup>
+
+</Project>
