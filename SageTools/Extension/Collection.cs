@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace SageTools.Extension
 {
@@ -59,6 +60,20 @@ namespace SageTools.Extension
         public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, int, bool> predicate, bool condition)
         {
             return condition ? source.Where(predicate) : source;
+        }
+
+        /// <summary>
+        /// 分页查询拓展
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="allItems"></param>
+        /// <param name="pageIndex">页索引</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns></returns>
+        public static List<T> ToPagedList<T>(this IEnumerable<T> allItems, int pageIndex, int pageSize)
+        {
+            var itemList = allItems.Skip(pageSize * (pageIndex - 1)).Take(pageSize).ToList();
+            return itemList;
         }
 
         #endregion
