@@ -1,1 +1,3 @@
-./nuget.exe push DKPro.Common.Standard.1.0.2.nupkg oy2gr7zonpeuisj62okqkh35bcwaerwuzpos32nyomo3ta -Source https://api.nuget.org/v3/index.json
+./nuget.exe push SageTools.0.0.3.nupkg oy2gr7zonpeuisj62okqkh35bcwaerwuzpos32nyomo3ta -Source https://api.nuget.org/v3/index.json
+
+dotnet nuget push SageTools.0.0.3.nupkg oy2gr7zonpeuisj62okqkh35bcwaerwuzpos32nyomo3ta -Source https://api.nuget.org/v3/index.json
