@@ -78,12 +78,18 @@ namespace SageTools.Extension
 
         #endregion
 
+        /// <summary>
+        /// 是否为null或空集合
+        /// </summary>
         public static bool IsNullOrEmpty<T>(IEnumerable<T> list)
         {
             if (list == null) return true;
             return !list.Any();
         }
 
+        /// <summary>
+        /// 是否不为null且不为空集合
+        /// </summary>
         public static bool IsNotNullOrEmpty<T>(IEnumerable<T> list)
         {
             return !IsNullOrEmpty(list);
