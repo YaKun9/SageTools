@@ -1,15 +1,28 @@
-﻿namespace SageTools.Extension
+﻿using System;
+
+namespace SageTools.Extension
 {
     public static partial class Extension
     {
-        public static bool IsNull(this object obj)
+        public static bool IsNull(this object obj) => obj == null;
+
+        public static bool IsNotNull(this object obj) => obj != null;
+
+        public static void IfFalse(this bool @this, Action trueAction, Action falseAction = null)
         {
-            return obj == null;
+            if (!@this)
+                trueAction();
+            else if (falseAction != null)
+                falseAction();
         }
 
-        public static bool IsNotNull(this object obj)
+        public static void IfTrue(this bool @this, Action trueAction, Action falseAction = null)
         {
-            return obj != null;
+            if (@this)
+                trueAction();
+            else if (falseAction != null)
+                falseAction();
         }
+
     }
 }

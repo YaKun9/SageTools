@@ -4,8 +4,6 @@ namespace SageTools.Extension
 {
     public static partial class Extension
     {
-        #region Int
-
         /// <summary>
         /// 阿拉伯数字转中文
         /// </summary>
@@ -17,32 +15,94 @@ namespace SageTools.Extension
             {
                 throw new ArgumentOutOfRangeException(nameof(arabNum), $"取值应在0~9，当前为{arabNum}");
             }
-            var chineseChars = new string[] { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+            var chineseChars = new string[] {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
             return chineseChars[arabNum];
         }
 
-        public static int ToInt(this object obj)
-        {
-            if (obj.IsNull()) throw new ArgumentNullException(nameof(obj),"null不可以转int，如需返回默认值，请使用重载方法");
-            if (int.TryParse(obj.ToString(), out int value))
-            {
-                return value;
-            }
-            throw new ArgumentException("值无法转为Int", nameof(obj));
-        }
-
         /// <summary>
-        /// 转为Int，失败时返回指定的值，默认0
+        /// 转为Int16(short)，失败时返回指定的值，默认0
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="defaultValue">失败时返回的默认值</param>
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
-        public static int ToInt(this object obj,int defaultValue)
+        public static short ToInt16(this object obj, short defaultValue = 0)
+        {
+            if (obj.IsNull()) return defaultValue;
+            short.TryParse(obj.ToString(), out defaultValue);
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 转为Int32(int)，失败时返回指定的值，默认0
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="defaultValue">失败时返回的默认值</param>
+        /// <returns>转换后的值，失败时返回指定的默认值</returns>
+        public static int ToInt32(this object obj, int defaultValue = 0)
         {
             if (obj.IsNull()) return defaultValue;
             int.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
-        #endregion
+
+        /// <summary>
+        /// 转为Int64(long)，失败时返回指定的值，默认0
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="defaultValue">失败时返回的默认值</param>
+        /// <returns>转换后的值，失败时返回指定的默认值</returns>
+        public static long ToInt64(this object obj, long defaultValue = 0)
+        {
+            if (obj.IsNull()) return defaultValue;
+            long.TryParse(obj.ToString(), out defaultValue);
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 转为Single(float)，失败时返回指定的值，默认0
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="defaultValue">失败时返回的默认值</param>
+        /// <returns>转换后的值，失败时返回指定的默认值</returns>
+        public static float ToSingle(this object obj, float defaultValue = 0)
+        {
+            if (obj.IsNull()) return defaultValue;
+            float.TryParse(obj.ToString(), out defaultValue);
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 转为Double(double)，失败时返回指定的值，默认0
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="defaultValue">失败时返回的默认值</param>
+        /// <returns>转换后的值，失败时返回指定的默认值</returns>
+        public static double ToDouble(this object obj, double defaultValue = 0)
+        {
+            if (obj.IsNull()) return defaultValue;
+            double.TryParse(obj.ToString(), out defaultValue);
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 转为Decimal(decimal)，失败时返回指定的值，默认0
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="defaultValue">失败时返回的默认值</param>
+        /// <returns>转换后的值，失败时返回指定的默认值</returns>
+        public static decimal ToDecimal(this object obj, decimal defaultValue = 0)
+        {
+            if (obj.IsNull()) return defaultValue;
+            decimal.TryParse(obj.ToString(), out defaultValue);
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// int转布尔，只有1=true，其他均为false
+        /// </summary>
+        public static bool ToBool(this int num)
+        {
+            return num == 1;
+        }
     }
 }

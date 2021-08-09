@@ -88,5 +88,6 @@ namespace SageTools.Extension
         {
             return !IsNullOrEmpty(list);
         }
+
     }
 }
