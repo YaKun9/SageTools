@@ -385,5 +385,24 @@ namespace SageTools.Extension
             return @this;
         }
 
+        /// <summary>
+        /// 从左截取指定字符，超出长度则截取到末尾
+        /// </summary>
+        public static string LeftSafe(this string @this, int length) => @this.Substring(0, Math.Min(length, @this.Length));
+
+        /// <summary>
+        /// 从左截取指定字符，超出长度则截取到末尾
+        /// </summary>
+        public static string Left(this string @this, int length) => @this.LeftSafe(length);
+
+        /// <summary>
+        /// 从右截取指定字符，超出长度则截取到开头
+        /// </summary>
+        public static string RightSafe(this string @this, int length) => @this.Substring(Math.Max(0, @this.Length - length));
+
+        /// <summary>
+        /// 从右截取指定字符，超出长度则截取到开头
+        /// </summary>
+        public static string Right(this string @this, int length) => @this.RightSafe(length);
     }
 }
