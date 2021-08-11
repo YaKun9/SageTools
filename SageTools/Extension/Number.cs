@@ -104,5 +104,18 @@ namespace SageTools.Extension
         {
             return num == 1;
         }
+
+        /// <summary>
+        /// 计算分页页数
+        /// </summary>
+        /// <param name="totalCount">总条数</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns></returns>
+        public static int ToPageCount(this int totalCount,int pageSize)
+        {
+            if(totalCount==0 || pageSize==0)return 0;
+            if (pageSize == 1) return totalCount;
+            return (int)Math.Ceiling(1D * totalCount / pageSize);
+        }
     }
 }
