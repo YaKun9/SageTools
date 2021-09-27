@@ -70,7 +70,7 @@ namespace SageTools.Extension
         /// <param name="pageIndex">页索引</param>
         /// <param name="pageSize">页大小</param>
         /// <returns></returns>
-        public static List<T> ToPagedList<T>(this IEnumerable<T> allItems, int pageIndex, int pageSize)
+        public static IList<T> ToPagedList<T>(this IEnumerable<T> allItems, int pageIndex, int pageSize)
         {
             var itemList = allItems.Skip(pageSize * (pageIndex - 1)).Take(pageSize).ToList();
             return itemList;
@@ -94,6 +94,5 @@ namespace SageTools.Extension
         {
             return !IsNullOrEmpty(list);
         }
-
     }
 }
