@@ -15,8 +15,8 @@ namespace SageTools.Console
            System.Console.WriteLine(DateTime.Now.IsAfternoon());
            System.Console.WriteLine(DateTime.Now.IsMorning());
            System.Console.WriteLine(DateTime.Now.IsNow());
-
            System.Console.ReadKey();
         }
     }
+
 }
