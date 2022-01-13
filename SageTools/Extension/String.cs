@@ -117,7 +117,7 @@ namespace SageTools.Extension
         /// </summary>
         public static void SaveAsFile(this string @this, string fileName, bool append = false)
         {
-            using (TextWriter textWriter = new StreamWriter(fileName, append))
+            using TextWriter textWriter = new StreamWriter(fileName, append);
             textWriter.Write(@this);
         }
 
@@ -126,8 +126,8 @@ namespace SageTools.Extension
         /// </summary>
         public static void SaveAsFile(this string @this, FileInfo file, bool append = false)
         {
-            using (TextWriter textWriter = new StreamWriter(file.FullName, append))
-                textWriter.Write(@this);
+            using TextWriter textWriter = new StreamWriter(file.FullName, append);
+            textWriter.Write(@this);
         }
 
         /// <summary>

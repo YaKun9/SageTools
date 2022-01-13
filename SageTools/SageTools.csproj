@@ -7,6 +7,7 @@
     <Company>LiuDanK</Company>
     <Description>常用工具类、拓展方法等封装，目前还在实现中</Description>
     <Copyright>Copyright © LiuDanK 2021</Copyright>
+	  <VersionPrefix>1.0.0</VersionPrefix>
   </PropertyGroup>
 
 </Project>
