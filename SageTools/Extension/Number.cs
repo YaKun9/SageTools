@@ -117,5 +117,10 @@ namespace SageTools.Extension
             if (pageSize == 1) return totalCount;
             return (int)Math.Ceiling(1D * totalCount / pageSize);
         }
+
+        public static DateTime ToDateTime(this long timeStamp)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(timeStamp);
+        }
     }
 }
