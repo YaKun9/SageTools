@@ -15,7 +15,7 @@ namespace SageTools.Extension
             {
                 throw new ArgumentOutOfRangeException(nameof(arabNum), $"取值应在0~9，当前为{arabNum}");
             }
-            var chineseChars = new string[] {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
+            var chineseChars = new[] {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
             return chineseChars[arabNum];
         }
 
