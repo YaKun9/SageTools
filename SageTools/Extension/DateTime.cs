@@ -164,5 +164,16 @@ namespace SageTools.Extension
         public static string ToRFC1123String(this DateTime @this, string culture) => @this.ToString("r", (IFormatProvider)new CultureInfo(culture));
 
         public static string ToRFC1123String(this DateTime @this, CultureInfo culture) => @this.ToString("r", (IFormatProvider)culture);
+
+        /// <summary>
+        /// 获取时间戳
+        /// </summary>
+        /// <param name="this"></param>
+        /// <returns></returns>
+        public static long GetTimeStamp(this DateTime @this)
+        {
+            return (long)(@this - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+        }
+
     }
 }
