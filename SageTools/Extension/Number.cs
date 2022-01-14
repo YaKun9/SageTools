@@ -114,6 +114,7 @@ namespace SageTools.Extension
         public static int ToPageCount(this int totalCount,int pageSize)
         {
             if(totalCount==0 || pageSize==0)return 0;
+            if (totalCount <= pageSize) return 1;
             if (pageSize == 1) return totalCount;
             return (int)Math.Ceiling(1D * totalCount / pageSize);
         }

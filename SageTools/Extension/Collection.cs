@@ -73,17 +73,41 @@ namespace SageTools.Extension
         /// <param name="pageSize">每页大小</param>
         public static void PagingToOperate<T>(this ICollection<T> list, Action<ICollection<T>> action, int pageSize = 1000)
         {
-            if (list.IsNullOrEmpty())
+            if (list.IsNullOrEmpty() || list.Count <= pageSize)
             {
                 action(list);
             }
             else
             {
-                var pageCount = Math.Ceiling(list.Count * 1d / pageSize);
+                var pageCount = list.Count.ToPageCount(pageSize);
                 for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
                 {
                     var items = list.Skip(pageIndex * pageSize).Take(pageSize).ToList();
                     action(items);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 分页执行操作，返回当前页码
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list">源数据集合</param>
+        /// <param name="action">要进行的操作</param>
+        /// <param name="pageSize">每页大小</param>
+        public static void PagingToOperate<T>(this ICollection<T> list, Action<ICollection<T>,int> action, int pageSize = 1000)
+        {
+            if (list.IsNullOrEmpty() || list.Count <= pageSize)
+            {
+                action(list,1);
+            }
+            else
+            {
+                var pageCount = list.Count.ToPageCount(pageSize);
+                for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
+                {
+                    var items = list.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                    action(items, pageIndex + 1);
                 }
             }
         }
