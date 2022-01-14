@@ -55,7 +55,6 @@ namespace SageTools.Console
             }
             xmlDoc.Save(path);
             System.Console.WriteLine("处理完毕!");
-            System.Console.ReadKey();
         }
     }
 }
