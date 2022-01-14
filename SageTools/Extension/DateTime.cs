@@ -170,7 +170,7 @@ namespace SageTools.Extension
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
-        public static long GetTimeStamp(this DateTime @this)
+        public static long ToTimeStamp(this DateTime @this)
         {
             return (long)(@this - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
         }
