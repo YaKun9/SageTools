@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace SageTools.Extension
 {
@@ -24,14 +30,17 @@ namespace SageTools.Extension
             {
                 return str;
             }
+
             if (length == 0)
             {
                 return string.Empty;
             }
+
             if (length < 0 || length > str.Length)
             {
                 return returnAllOrThrowWhenIndexOutOfRange ? str : throw new IndexOutOfRangeException();
             }
+
             return str.Substring(length);
         }
 
@@ -109,6 +118,7 @@ namespace SageTools.Extension
             {
                 str = str.Replace(oldValue, "");
             }
+
             return str;
         }
 
@@ -310,7 +320,8 @@ namespace SageTools.Extension
         /// <summary>
         /// 是否是正确的email地址
         /// </summary>
-        public static bool IsValidEmail(this string obj) => Regex.IsMatch(obj, "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
+        public static bool IsValidEmail(this string obj) =>
+            Regex.IsMatch(obj, "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
 
         /// <summary>
         /// 是否是正确的ip地址
@@ -343,14 +354,14 @@ namespace SageTools.Extension
         /// <summary>
         /// 满足条件则添加
         /// </summary>
-        
         public static StringBuilder AppendIf<T>(this StringBuilder @this, Func<T, bool> predicate, params T[] values)
         {
-            foreach (T obj in values)
+            foreach (var obj in values)
             {
                 if (predicate(obj))
                     @this.Append((object) obj);
             }
+
             return @this;
         }
 
@@ -359,11 +370,12 @@ namespace SageTools.Extension
         /// </summary>
         public static StringBuilder AppendLineIf<T>(this StringBuilder @this, Func<T, bool> predicate, params T[] values)
         {
-            foreach (T obj in values)
+            foreach (var obj in values)
             {
                 if (predicate(obj))
                     @this.AppendLine(obj.ToString());
             }
+
             return @this;
         }
 
@@ -404,5 +416,470 @@ namespace SageTools.Extension
         /// 从右截取指定字符，超出长度则截取到开头
         /// </summary>
         public static string Right(this string @this, int length) => @this.RightSafe(length);
+
+        /// <summary>
+        ///  转换为日期格式
+        /// </summary>
+        public static DateTime ToDateTime(this string @this) => Convert.ToDateTime(@this);
+
+        /// <summary>
+        /// 转为字节数组
+        /// </summary>
+        /// <param name="base64Str">base64字符串</param>
+        /// <returns></returns>
+        public static byte[] ToBytes_FromBase64Str(this string base64Str)
+        {
+            return Convert.FromBase64String(base64Str);
+        }
+
+        /// <summary>
+        /// 转换为MD5加密后的字符串（默认加密为32位）
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ToMD5String(this string str)
+        {
+            var md5 = MD5.Create();
+            var inputBytes = Encoding.UTF8.GetBytes(str);
+            var hashBytes = md5.ComputeHash(inputBytes);
+
+            var sb = new StringBuilder();
+            foreach (var t in hashBytes)
+            {
+                sb.Append(t.ToString("x2"));
+            }
+
+            md5.Dispose();
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 转换为MD5加密后的字符串（16位）
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string ToMD5String16(this string str)
+        {
+            return str.ToMD5String().Substring(8, 16);
+        }
+
+        /// <summary>
+        /// Base64加密
+        /// 注:默认采用UTF8编码
+        /// </summary>
+        /// <param name="source">待加密的明文</param>
+        /// <returns>加密后的字符串</returns>
+        public static string Base64Encode(this string source)
+        {
+            return Base64Encode(source, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Base64加密
+        /// </summary>
+        /// <param name="source">待加密的明文</param>
+        /// <param name="encoding">加密采用的编码方式</param>
+        /// <returns></returns>
+        public static string Base64Encode(this string source, Encoding encoding)
+        {
+            string encode;
+            var bytes = encoding.GetBytes(source);
+            try
+            {
+                encode = Convert.ToBase64String(bytes);
+            }
+            catch
+            {
+                encode = source;
+            }
+
+            return encode;
+        }
+
+        /// <summary>
+        /// Base64解密
+        /// 注:默认使用UTF8编码
+        /// </summary>
+        /// <param name="result">待解密的密文</param>
+        /// <returns>解密后的字符串</returns>
+        public static string Base64Decode(this string result)
+        {
+            return Base64Decode(result, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Base64解密
+        /// </summary>
+        /// <param name="result">待解密的密文</param>
+        /// <param name="encoding">解密采用的编码方式，注意和加密时采用的方式一致</param>
+        /// <returns>解密后的字符串</returns>
+        public static string Base64Decode(this string result, Encoding encoding)
+        {
+            string decode;
+            var bytes = Convert.FromBase64String(result);
+            try
+            {
+                decode = encoding.GetString(bytes);
+            }
+            catch
+            {
+                decode = result;
+            }
+
+            return decode;
+        }
+
+        /// <summary>
+        /// Base64Url编码
+        /// </summary>
+        /// <param name="text">待编码的文本字符串</param>
+        /// <returns>编码的文本字符串</returns>
+        public static string Base64UrlEncode(this string text)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(text);
+            var base64 = Convert.ToBase64String(plainTextBytes).Replace('+', '-').Replace('/', '_').TrimEnd('=');
+
+            return base64;
+        }
+
+        /// <summary>
+        /// Base64Url解码
+        /// </summary>
+        /// <param name="base64UrlStr">使用Base64Url编码后的字符串</param>
+        /// <returns>解码后的内容</returns>
+        public static string Base64UrlDecode(this string base64UrlStr)
+        {
+            base64UrlStr = base64UrlStr.Replace('-', '+').Replace('_', '/');
+            switch (base64UrlStr.Length % 4)
+            {
+                case 2:
+                    base64UrlStr += "==";
+                    break;
+                case 3:
+                    base64UrlStr += "=";
+                    break;
+            }
+
+            var bytes = Convert.FromBase64String(base64UrlStr);
+
+            return Encoding.UTF8.GetString(bytes);
+        }
+
+        /// <summary>
+        /// 计算SHA1摘要
+        /// 注：默认使用UTF8编码
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static byte[] ToSHA1Bytes(this string str)
+        {
+            return str.ToSHA1Bytes(Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// 计算SHA1摘要
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="encoding">编码</param>
+        /// <returns></returns>
+        public static byte[] ToSHA1Bytes(this string str, Encoding encoding)
+        {
+            SHA1 sha1 = new SHA1CryptoServiceProvider();
+            var inputBytes = encoding.GetBytes(str);
+            var outputBytes = sha1.ComputeHash(inputBytes);
+
+            return outputBytes;
+        }
+
+        /// <summary>
+        /// 转为SHA1哈希加密字符串
+        /// 注：默认使用UTF8编码
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static string ToSHA1String(this string str)
+        {
+            return str.ToSHA1String(Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// 转为SHA1哈希
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="encoding">编码</param>
+        /// <returns></returns>
+        public static string ToSHA1String(this string str, Encoding encoding)
+        {
+            var sha1Bytes = str.ToSHA1Bytes(encoding);
+            var resStr = BitConverter.ToString(sha1Bytes);
+            return resStr.Replace("-", "").ToLower();
+        }
+
+        /// <summary>
+        /// SHA256加密
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static string ToSHA256String(this string str)
+        {
+            var bytes = Encoding.UTF8.GetBytes(str);
+            var hash = SHA256.Create().ComputeHash(bytes);
+
+            var builder = new StringBuilder();
+            foreach (var t in hash)
+            {
+                builder.Append(t.ToString("x2"));
+            }
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// HMACSHA256算法
+        /// </summary>
+        /// <param name="text">内容</param>
+        /// <param name="secret">密钥</param>
+        /// <returns></returns>
+        public static string ToHMACSHA256String(this string text, string secret)
+        {
+            secret ??= "";
+            var keyByte = Encoding.UTF8.GetBytes(secret);
+            var messageBytes = Encoding.UTF8.GetBytes(text);
+            using var hmacsha256 = new HMACSHA256(keyByte);
+            var hashmessage = hmacsha256.ComputeHash(messageBytes);
+            return Convert.ToBase64String(hashmessage).Replace('+', '-').Replace('/', '_').TrimEnd('=');
+        }
+
+        /// <summary>
+        /// string转int
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static int ToInt(this string str)
+        {
+            str = str.Replace("\0", "");
+            if (string.IsNullOrEmpty(str))
+                return 0;
+            return Convert.ToInt32(str);
+        }
+
+        /// <summary>
+        /// string转long
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static long ToLong(this string str)
+        {
+            str = str.Replace("\0", "");
+            if (string.IsNullOrEmpty(str))
+                return 0;
+
+            return Convert.ToInt64(str);
+        }
+
+        /// <summary>
+        /// 二进制字符串转为Int
+        /// </summary>
+        /// <param name="str">二进制字符串</param>
+        /// <returns></returns>
+        public static int ToInt_FromBinString(this string str)
+        {
+            return Convert.ToInt32(str, 2);
+        }
+
+        /// <summary>
+        /// 将16进制字符串转为Int
+        /// </summary>
+        /// <param name="str">数值</param>
+        /// <returns></returns>
+        public static int ToInt0X(this string str)
+        {
+            int num = Int32.Parse(str, NumberStyles.HexNumber);
+            return num;
+        }
+
+        /// <summary>
+        /// 转换为double
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static double ToDouble(this string str)
+        {
+            return Convert.ToDouble(str);
+        }
+
+        /// <summary>
+        /// string转byte[]
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static byte[] ToBytes(this string str)
+        {
+            return Encoding.Default.GetBytes(str);
+        }
+
+        /// <summary>
+        /// string转byte[]
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="theEncoding">需要的编码</param>
+        /// <returns></returns>
+        public static byte[] ToBytes(this string str, Encoding theEncoding)
+        {
+            return theEncoding.GetBytes(str);
+        }
+
+        /// <summary>
+        /// 将16进制字符串转为Byte数组
+        /// </summary>
+        /// <param name="str">16进制字符串(2个16进制字符表示一个Byte)</param>
+        /// <returns></returns>
+        public static byte[] To0XBytes(this string str)
+        {
+            List<byte> resBytes = new List<byte>();
+            for (int i = 0; i < str.Length; i = i + 2)
+            {
+                string numStr = $@"{str[i]}{str[i + 1]}";
+                resBytes.Add((byte) numStr.ToInt0X());
+            }
+
+            return resBytes.ToArray();
+        }
+
+        /// <summary>
+        /// 将ASCII码形式的字符串转为对应字节数组
+        /// 注：一个字节一个ASCII码字符
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static byte[] ToASCIIBytes(this string str)
+        {
+            return str.ToList().Select(x => (byte) x).ToArray();
+        }
+
+        /// <summary>
+        /// 删除Json字符串中键中的@符号
+        /// </summary>
+        /// <param name="jsonStr">json字符串</param>
+        /// <returns></returns>
+        public static string RemoveAt(this string jsonStr)
+        {
+            Regex reg = new Regex("\"@([^ \"]*)\"\\s*:\\s*\"(([^ \"]+\\s*)*)\"");
+            string strPatten = "\"$1\":\"$2\"";
+            return reg.Replace(jsonStr, strPatten);
+        }
+
+        /// <summary>
+        /// json数据转实体类,仅仅应用于单个实体类，速度非常快
+        /// </summary>
+        /// <typeparam name="T">泛型参数</typeparam>
+        /// <param name="json">json字符串</param>
+        /// <returns></returns>
+        public static T ToEntity<T>(this string json)
+        {
+            if (string.IsNullOrEmpty(json))
+                return default(T);
+
+            var type = typeof(T);
+            var obj = Activator.CreateInstance(type, null);
+
+            foreach (var item in type.GetProperties())
+            {
+                var info = obj.GetType().GetProperty(item.Name);
+                var pattern = "\"" + item.Name + "\":\"(.*?)\"";
+                foreach (Match match in Regex.Matches(json, pattern))
+                {
+                    switch (item.PropertyType.ToString())
+                    {
+                        case "System.String":
+                            info?.SetValue(obj, match.Groups[1].ToString(), null);
+                            break;
+                        case "System.Int32":
+                            info?.SetValue(obj, match.Groups[1].ToString().ToInt(), null);
+                            break;
+                        case "System.Int64":
+                            info?.SetValue(obj, Convert.ToInt64(match.Groups[1].ToString()), null);
+                            break;
+                        case "System.DateTime":
+                            info?.SetValue(obj, Convert.ToDateTime(match.Groups[1].ToString()), null);
+                            break;
+                    }
+                }
+            }
+
+            return (T) obj;
+        }
+
+        /// <summary>
+        /// 转为首字母大写
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static string ToFirstUpperStr(this string str)
+        {
+            return str[..1].ToUpper() + str[1..];
+        }
+
+        /// <summary>
+        /// 转为首字母小写
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static string ToFirstLowerStr(this string str)
+        {
+            return str[..1].ToLower() + str[1..];
+        }
+
+        /// <summary>
+        /// 转为网络终结点IPEndPoint
+        /// </summary>=
+        /// <param name="str">字符串</param>
+        /// <returns></returns>
+        public static IPEndPoint ToIPEndPoint(this string str)
+        {
+            IPEndPoint iPEndPoint = null;
+            try
+            {
+                var strArray = str.Split(':').ToArray();
+                var addr = strArray[0];
+                var port = Convert.ToInt32(strArray[1]);
+                iPEndPoint = new IPEndPoint(IPAddress.Parse(addr), port);
+            }
+            catch
+            {
+                iPEndPoint = null;
+            }
+
+            return iPEndPoint;
+        }
+
+        /// <summary>
+        /// 将枚举类型的文本转为枚举类型
+        /// </summary>
+        /// <typeparam name="TEnum">枚举类型</typeparam>
+        /// <param name="enumText">枚举文本</param>
+        /// <returns></returns>
+        public static TEnum ToEnum<TEnum>(this string enumText) where TEnum : struct
+        {
+            System.Enum.TryParse(enumText, out TEnum value);
+
+            return value;
+        }
+
+        /// <summary>
+        /// 是否为弱密码
+        /// 注:密码必须包含数字、小写字母、大写字母和其他符号中的两种并且长度大于8
+        /// </summary>
+        /// <param name="pwd">密码</param>
+        /// <returns></returns>
+        public static bool IsWeakPwd(this string pwd)
+        {
+            if (pwd.IsNullOrEmpty())
+                throw new Exception("pwd不能为空");
+
+            const string pattern = "(^[0-9]+$)|(^[a-z]+$)|(^[A-Z]+$)|(^.{0,8}$)";
+            return Regex.IsMatch(pwd, pattern);
+        }
     }
 }
