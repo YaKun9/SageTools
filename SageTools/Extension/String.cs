@@ -5,13 +5,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Xml.Linq;
-using System.Xml;
 
 namespace SageTools.Extension
 {
@@ -149,74 +146,108 @@ namespace SageTools.Extension
             {
                 case "bigint":
                     return SqlDbType.BigInt;
+
                 case "binary":
                     return SqlDbType.Binary;
+
                 case "bit":
                     return SqlDbType.Bit;
+
                 case "char":
                     return SqlDbType.Char;
+
                 case "date":
                     return SqlDbType.Date;
+
                 case "datetime":
                     return SqlDbType.DateTime;
+
                 case "datetime2":
                     return SqlDbType.DateTime2;
+
                 case "datetimeoffset":
                     return SqlDbType.DateTimeOffset;
+
                 case "decimal":
                     return SqlDbType.Decimal;
+
                 case "float":
                     return SqlDbType.Float;
+
                 case "geography":
                     return SqlDbType.Udt;
+
                 case "geometry":
                     return SqlDbType.Udt;
+
                 case "hierarchyid":
                     return SqlDbType.Udt;
+
                 case "image":
                     return SqlDbType.Image;
+
                 case "int":
                     return SqlDbType.Int;
+
                 case "money":
                     return SqlDbType.Money;
+
                 case "nchar":
                     return SqlDbType.NChar;
+
                 case "ntext":
                     return SqlDbType.NText;
+
                 case "numeric":
                     return SqlDbType.Decimal;
+
                 case "nvarchar":
                     return SqlDbType.NVarChar;
+
                 case "real":
                     return SqlDbType.Real;
+
                 case "smalldatetime":
                     return SqlDbType.SmallDateTime;
+
                 case "smallint":
                     return SqlDbType.SmallInt;
+
                 case "smallmoney":
                     return SqlDbType.SmallMoney;
+
                 case "sql_variant":
                     return SqlDbType.Variant;
+
                 case "sysname":
                     return SqlDbType.NVarChar;
+
                 case "text":
                     return SqlDbType.Text;
+
                 case "time":
                     return SqlDbType.Time;
+
                 case "timestamp":
                     return SqlDbType.Timestamp;
+
                 case "tinyint":
                     return SqlDbType.TinyInt;
+
                 case "uniqueidentifier":
                     return SqlDbType.UniqueIdentifier;
+
                 case "varbinary":
                     return SqlDbType.VarBinary;
+
                 case "varchar":
                     return SqlDbType.VarChar;
+
                 case "xml":
                     return SqlDbType.Xml;
+
                 default:
-                    throw new Exception(string.Format("Unsupported Type: {0}", (object) @this));
+                    throw new Exception(string.Format("Unsupported Type: {0}", (object)@this));
             }
         }
 
@@ -359,7 +390,7 @@ namespace SageTools.Extension
             foreach (var obj in values)
             {
                 if (predicate(obj))
-                    @this.Append((object) obj);
+                    @this.Append((object)obj);
             }
 
             return @this;
@@ -393,7 +424,7 @@ namespace SageTools.Extension
         /// </summary>
         public static StringBuilder AppendLineFormat(this StringBuilder @this, string format, List<IEnumerable<object>> args)
         {
-            @this.AppendLine(string.Format(format, (object) args));
+            @this.AppendLine(string.Format(format, (object)args));
             return @this;
         }
 
@@ -556,6 +587,7 @@ namespace SageTools.Extension
                 case 2:
                     base64UrlStr += "==";
                     break;
+
                 case 3:
                     base64UrlStr += "=";
                     break;
@@ -741,7 +773,7 @@ namespace SageTools.Extension
             for (int i = 0; i < str.Length; i = i + 2)
             {
                 string numStr = $@"{str[i]}{str[i + 1]}";
-                resBytes.Add((byte) numStr.ToInt0X());
+                resBytes.Add((byte)numStr.ToInt0X());
             }
 
             return resBytes.ToArray();
@@ -755,7 +787,7 @@ namespace SageTools.Extension
         /// <returns></returns>
         public static byte[] ToASCIIBytes(this string str)
         {
-            return str.ToList().Select(x => (byte) x).ToArray();
+            return str.ToList().Select(x => (byte)x).ToArray();
         }
 
         /// <summary>
@@ -795,12 +827,15 @@ namespace SageTools.Extension
                         case "System.String":
                             info?.SetValue(obj, match.Groups[1].ToString(), null);
                             break;
+
                         case "System.Int32":
                             info?.SetValue(obj, match.Groups[1].ToString().ToInt(), null);
                             break;
+
                         case "System.Int64":
                             info?.SetValue(obj, Convert.ToInt64(match.Groups[1].ToString()), null);
                             break;
+
                         case "System.DateTime":
                             info?.SetValue(obj, Convert.ToDateTime(match.Groups[1].ToString()), null);
                             break;
@@ -808,7 +843,7 @@ namespace SageTools.Extension
                 }
             }
 
-            return (T) obj;
+            return (T)obj;
         }
 
         /// <summary>
