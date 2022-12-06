@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,33 +13,6 @@ namespace SageTools.Extension
 {
     public static partial class Extension
     {
-        /// <summary>
-        /// 从字符串中截取指定长度
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="length">指定的长度</param>
-        /// <param name="returnAllOrThrowWhenIndexOutOfRange">当指定的长度超出或小于0时,True返回整体字符串(默认),False抛出IndexOutOfRange异常</param>
-        /// <returns></returns>
-        public static string SubSpecifiedLengthStr(this string str, int length, bool returnAllOrThrowWhenIndexOutOfRange = true)
-        {
-            if (str.IsNullOrEmpty())
-            {
-                return str;
-            }
-
-            if (length == 0)
-            {
-                return string.Empty;
-            }
-
-            if (length < 0 || length > str.Length)
-            {
-                return returnAllOrThrowWhenIndexOutOfRange ? str : throw new IndexOutOfRangeException();
-            }
-
-            return str.Substring(length);
-        }
-
         public static bool IsNullOrEmpty(this string str)
         {
             return string.IsNullOrEmpty(str);
@@ -84,39 +56,34 @@ namespace SageTools.Extension
         /// <summary>
         /// string.Join()拓展
         /// </summary>
-        public static string Join(this string separator, string[] value) => string.Join(separator, value);
+        public static string JoinWith(this string separator, string[] value) => string.Join(separator, value);
 
         /// <summary>
         /// string.Join()拓展
         /// </summary>
-        public static string Join(this string separator, object[] values) => string.Join(separator, values);
+        public static string JoinWith(this string separator, object[] values) => string.Join(separator, values);
 
         /// <summary>
         /// string.Join()拓展
         /// </summary>
-        public static string Join<T>(this string separator, IEnumerable<T> values) => string.Join<T>(separator, values);
+        public static string JoinWith<T>(this string separator, IEnumerable<T> values) => string.Join<T>(separator, values);
 
         /// <summary>
         /// string.Join()拓展
         /// </summary>
-        public static string Join(this string separator, IEnumerable<string> values) => string.Join(separator, values);
+        public static string JoinWith(this string separator, IEnumerable<string> values) => string.Join(separator, values);
 
         /// <summary>
         /// string.Join()拓展
         /// </summary>
-        public static string Join(this string separator, string[] value, int startIndex, int count) => string.Join(separator, value, startIndex, count);
+        public static string JoinWith(this string separator, string[] value, int startIndex, int count) => string.Join(separator, value, startIndex, count);
 
         /// <summary>
         /// string.Replace("oldValue","")
         /// </summary>
         public static string ReplaceByEmpty(this string str, params string[] values)
         {
-            foreach (var oldValue in values)
-            {
-                str = str.Replace(oldValue, "");
-            }
-
-            return str;
+            return values.Aggregate(str, (current, oldValue) => current.Replace(oldValue, ""));
         }
 
         /// <summary>
@@ -315,74 +282,6 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        /// 进行MD5加密
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string Md5(this string str)
-        {
-            byte[] hash = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(str));
-            string str1 = "";
-            for (int index = 0; index < hash.Length; ++index)
-                str1 += hash[index].ToString("x").PadLeft(2, '0');
-            return str1;
-        }
-
-        /// <summary>
-        /// Regex.IsMatch()拓展
-        /// </summary>
-        public static bool IsMatch(this string input, string pattern) => Regex.IsMatch(input, pattern);
-
-        /// <summary>
-        /// Regex.IsMatch()拓展
-        /// </summary>
-        public static bool IsMatch(this string input, string pattern, RegexOptions options) => Regex.IsMatch(input, pattern, options);
-
-        /// <summary>
-        /// 正则判断是否为数字
-        /// </summary>
-        public static bool IsNumeric(this string @this) => !Regex.IsMatch(@this, "[^0-9]");
-
-        /// <summary>
-        /// 是否是正确的base64字符串
-        /// </summary>
-        public static bool IsValidBase64String(this string str) => Regex.IsMatch(str, "[A-Za-z0-9\\+\\/\\=]");
-
-        /// <summary>
-        /// 是否是正确的email地址
-        /// </summary>
-        public static bool IsValidEmail(this string obj) =>
-            Regex.IsMatch(obj, "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
-
-        /// <summary>
-        /// 是否是正确的ip地址
-        /// </summary>
-        public static bool IsValidIP(this string obj) => Regex.IsMatch(obj,
-            "^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$");
-
-        /// <summary>
-        /// 是否是正确的手机号
-        /// </summary>
-        public static bool IsValidMobile(string mobile)
-        {
-            if (mobile.IsNullOrEmpty())
-                return false;
-            mobile = mobile.Trim();
-            return Regex.IsMatch(mobile, "^(1[3|4|5|6|7|8|9])\\d{9}$", RegexOptions.IgnoreCase);
-        }
-
-        /// <summary>
-        /// 是否是安全的SQL，防注入
-        /// </summary>
-        public static bool IsValidSafeSqlString(this string str) => !Regex.IsMatch(str, "[-|;|,|\\/|\\(|\\)|\\[|\\]|\\}|\\{|%|@|\\*|!|\\']");
-
-        /// <summary>
-        /// 是否是URL
-        /// </summary>
-        public static bool IsUrl(this string strUrl) => Regex.IsMatch(strUrl,
-            "^(http|https)\\://([a-zA-Z0-9\\.\\-]+(\\:[a-zA-Z0-9\\.&%\\$\\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\\-]+\\.)*[a-zA-Z0-9\\-]+\\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{1,10}))(\\:[0-9]+)*(/($|[a-zA-Z0-9\\.\\,\\?\\'\\\\\\+&%\\$#\\=~_\\-]+))*$");
-
-        /// <summary>
         /// 满足条件则添加
         /// </summary>
         public static StringBuilder AppendIf<T>(this StringBuilder @this, Func<T, bool> predicate, params T[] values)
@@ -449,11 +348,6 @@ namespace SageTools.Extension
         public static string Right(this string @this, int length) => @this.RightSafe(length);
 
         /// <summary>
-        ///  转换为日期格式
-        /// </summary>
-        public static DateTime ToDateTime(this string @this) => Convert.ToDateTime(@this);
-
-        /// <summary>
         /// 转为字节数组
         /// </summary>
         /// <param name="base64Str">base64字符串</param>
@@ -468,7 +362,7 @@ namespace SageTools.Extension
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string ToMD5String(this string str)
+        public static string ToMd5String(this string str)
         {
             var md5 = MD5.Create();
             var inputBytes = Encoding.UTF8.GetBytes(str);
@@ -490,9 +384,9 @@ namespace SageTools.Extension
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string ToMD5String16(this string str)
+        public static string ToMd5String16(this string str)
         {
-            return str.ToMD5String().Substring(8, 16);
+            return str.ToMd5String().Substring(8, 16);
         }
 
         /// <summary>
@@ -606,7 +500,7 @@ namespace SageTools.Extension
         /// <returns></returns>
         public static byte[] ToSHA1Bytes(this string str)
         {
-            return str.ToSHA1Bytes(Encoding.UTF8);
+            return str.ToSha1Bytes(Encoding.UTF8);
         }
 
         /// <summary>
@@ -615,7 +509,7 @@ namespace SageTools.Extension
         /// <param name="str">字符串</param>
         /// <param name="encoding">编码</param>
         /// <returns></returns>
-        public static byte[] ToSHA1Bytes(this string str, Encoding encoding)
+        public static byte[] ToSha1Bytes(this string str, Encoding encoding)
         {
             SHA1 sha1 = new SHA1CryptoServiceProvider();
             var inputBytes = encoding.GetBytes(str);
@@ -630,7 +524,7 @@ namespace SageTools.Extension
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns></returns>
-        public static string ToSHA1String(this string str)
+        public static string ToSha1String(this string str)
         {
             return str.ToSHA1String(Encoding.UTF8);
         }
@@ -643,7 +537,7 @@ namespace SageTools.Extension
         /// <returns></returns>
         public static string ToSHA1String(this string str, Encoding encoding)
         {
-            var sha1Bytes = str.ToSHA1Bytes(encoding);
+            var sha1Bytes = str.ToSha1Bytes(encoding);
             var resStr = BitConverter.ToString(sha1Bytes);
             return resStr.Replace("-", "").ToLower();
         }
@@ -684,33 +578,6 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        /// string转int
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns></returns>
-        public static int ToInt(this string str)
-        {
-            str = str.Replace("\0", "");
-            if (string.IsNullOrEmpty(str))
-                return 0;
-            return Convert.ToInt32(str);
-        }
-
-        /// <summary>
-        /// string转long
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns></returns>
-        public static long ToLong(this string str)
-        {
-            str = str.Replace("\0", "");
-            if (string.IsNullOrEmpty(str))
-                return 0;
-
-            return Convert.ToInt64(str);
-        }
-
-        /// <summary>
         /// 二进制字符串转为Int
         /// </summary>
         /// <param name="str">二进制字符串</param>
@@ -725,21 +592,6 @@ namespace SageTools.Extension
         /// </summary>
         /// <param name="str">数值</param>
         /// <returns></returns>
-        public static int ToInt0X(this string str)
-        {
-            int num = Int32.Parse(str, NumberStyles.HexNumber);
-            return num;
-        }
-
-        /// <summary>
-        /// 转换为double
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns></returns>
-        public static double ToDouble(this string str)
-        {
-            return Convert.ToDouble(str);
-        }
 
         /// <summary>
         /// string转byte[]
@@ -760,34 +612,6 @@ namespace SageTools.Extension
         public static byte[] ToBytes(this string str, Encoding theEncoding)
         {
             return theEncoding.GetBytes(str);
-        }
-
-        /// <summary>
-        /// 将16进制字符串转为Byte数组
-        /// </summary>
-        /// <param name="str">16进制字符串(2个16进制字符表示一个Byte)</param>
-        /// <returns></returns>
-        public static byte[] To0XBytes(this string str)
-        {
-            List<byte> resBytes = new List<byte>();
-            for (int i = 0; i < str.Length; i = i + 2)
-            {
-                string numStr = $@"{str[i]}{str[i + 1]}";
-                resBytes.Add((byte)numStr.ToInt0X());
-            }
-
-            return resBytes.ToArray();
-        }
-
-        /// <summary>
-        /// 将ASCII码形式的字符串转为对应字节数组
-        /// 注：一个字节一个ASCII码字符
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns></returns>
-        public static byte[] ToASCIIBytes(this string str)
-        {
-            return str.ToList().Select(x => (byte)x).ToArray();
         }
 
         /// <summary>
@@ -829,7 +653,7 @@ namespace SageTools.Extension
                             break;
 
                         case "System.Int32":
-                            info?.SetValue(obj, match.Groups[1].ToString().ToInt(), null);
+                            info?.SetValue(obj, match.Groups[1].ToString().ToInt32(), null);
                             break;
 
                         case "System.Int64":
@@ -877,9 +701,8 @@ namespace SageTools.Extension
             try
             {
                 var strArray = str.Split(':').ToArray();
-                var addr = strArray[0];
                 var port = Convert.ToInt32(strArray[1]);
-                iPEndPoint = new IPEndPoint(IPAddress.Parse(addr), port);
+                iPEndPoint = new IPEndPoint(IPAddress.Parse(strArray[0]), port);
             }
             catch
             {
@@ -900,21 +723,6 @@ namespace SageTools.Extension
             System.Enum.TryParse(enumText, out TEnum value);
 
             return value;
-        }
-
-        /// <summary>
-        /// 是否为弱密码
-        /// 注:密码必须包含数字、小写字母、大写字母和其他符号中的两种并且长度大于8
-        /// </summary>
-        /// <param name="pwd">密码</param>
-        /// <returns></returns>
-        public static bool IsWeakPwd(this string pwd)
-        {
-            if (pwd.IsNullOrEmpty())
-                throw new Exception("pwd不能为空");
-
-            const string pattern = "(^[0-9]+$)|(^[a-z]+$)|(^[A-Z]+$)|(^.{0,8}$)";
-            return Regex.IsMatch(pwd, pattern);
         }
     }
 }
