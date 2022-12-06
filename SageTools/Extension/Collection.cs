@@ -95,11 +95,11 @@ namespace SageTools.Extension
         /// <param name="list">源数据集合</param>
         /// <param name="action">要进行的操作</param>
         /// <param name="pageSize">每页大小</param>
-        public static void PagingToOperate<T>(this ICollection<T> list, Action<ICollection<T>,int> action, int pageSize = 1000)
+        public static void PagingToOperate<T>(this ICollection<T> list, Action<ICollection<T>, int> action, int pageSize = 1000)
         {
             if (list.IsNullOrEmpty() || list.Count <= pageSize)
             {
-                action(list,1);
+                action(list, 1);
             }
             else
             {
@@ -110,6 +110,31 @@ namespace SageTools.Extension
                     action(items, pageIndex + 1);
                 }
             }
+        }
+
+        /// <summary>
+        /// 页码转偏移量;拒绝大量 pageIndex-1
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public static int PageIndexToOffset(this int pageIndex, int pageSize)
+        {
+            return (pageIndex - 1) * pageSize;
+        }
+
+        /// <summary>
+        /// 计算分页页数
+        /// </summary>
+        /// <param name="totalCount">总条数</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns></returns>
+        public static int ToPageCount(this int totalCount, int pageSize)
+        {
+            if (totalCount == 0 || pageSize == 0) return 0;
+            if (totalCount <= pageSize) return 1;
+            if (pageSize == 1) return totalCount;
+            return (int)Math.Ceiling(1D * totalCount / pageSize);
         }
     }
 }

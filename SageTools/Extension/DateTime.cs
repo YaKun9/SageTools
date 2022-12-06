@@ -175,5 +175,19 @@ namespace SageTools.Extension
             return (long)(@this - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
         }
 
+        /// <summary>
+        /// 时间戳转时间(秒)
+        /// </summary>
+        /// <param name="timeStamp">时间戳(秒)</param>
+        /// <returns></returns>
+        public static DateTime ToDateTime(this long timeStamp)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(timeStamp);
+        }
+
+        /// <summary>
+        ///  转换为日期格式
+        /// </summary>
+        public static DateTime ToDateTime(this string @this) => Convert.ToDateTime(@this);
     }
 }
