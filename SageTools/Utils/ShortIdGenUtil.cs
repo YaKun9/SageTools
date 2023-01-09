@@ -8,23 +8,23 @@ namespace SageTools.Utils
     /// 短 ID 生成类
     /// <para>代码参考自：https://github.com/MonkSoul/Furion </para>
     /// </summary>
-    public static class ShortIdGen
+    public static class ShortIdGenUtil
     {
         /// <summary>
         /// 短 ID 生成器期初数据
         /// </summary>
         private static Random _random = new Random();
 
-        private const string BIG = "ABCDEFGHIJKLMNPQRSTUVWXY";
-        private const string SMALL = "abcdefghjklmnopqrstuvwxyz";
-        private const string NUMBER = "0123456789";
-        private const string SPECIAL = "_-";
-        private static string _pool = $"{SMALL}{BIG}";
+        private const string Big = "ABCDEFGHIJKLMNPQRSTUVWXY";
+        private const string Small = "abcdefghjklmnopqrstuvwxyz";
+        private const string Number = "0123456789";
+        private const string Special = "_-";
+        private static string _pool = $"{Small}{Big}";
 
         /// <summary>
         /// 线程安全锁
         /// </summary>
-        private static readonly object _threadLock = new object();
+        private static readonly object ThreadLock = new object();
 
         /// <summary>
         /// 生成目前比较主流的短 ID
@@ -61,19 +61,19 @@ namespace SageTools.Utils
                 throw new ArgumentException(
                     $"The specified length of {options.Length} is less than the lower limit of {Constants.MINIMUM_AUTO_LENGTH} to avoid conflicts.");
             }
-            var characterPool = _pool;
+            var characterPool = ShortIdGenUtil._pool;
             var poolBuilder = new StringBuilder(characterPool);
 
             // 是否包含数字
             if (options.UseNumbers)
             {
-                poolBuilder.Append(NUMBER);
+                poolBuilder.Append(Number);
             }
 
             // 是否包含特殊字符
             if (options.UseSpecialCharacters)
             {
-                poolBuilder.Append(SPECIAL);
+                poolBuilder.Append(Special);
             }
             var pool = poolBuilder.ToString();
 
@@ -81,7 +81,7 @@ namespace SageTools.Utils
             var output = new char[options.Length];
             for (var i = 0; i < options.Length; i++)
             {
-                lock (_threadLock)
+                lock (ThreadLock)
                 {
                     var charIndex = _random.Next(0, pool.Length);
                     output[i] = pool[charIndex];
@@ -110,7 +110,7 @@ namespace SageTools.Utils
                 throw new InvalidOperationException(
                     $"The replacement characters must be at least {Constants.MINIMUM_CHARACTER_SET_LENGTH} letters in length and without whitespace.");
             }
-            lock (_threadLock)
+            lock (ThreadLock)
             {
                 _pool = new string(charSet);
             }
@@ -122,7 +122,7 @@ namespace SageTools.Utils
         /// <param name="seed"></param>
         public static void SetSeed(int seed)
         {
-            lock (_threadLock)
+            lock (ThreadLock)
             {
                 _random = new Random(seed);
             }
@@ -133,10 +133,10 @@ namespace SageTools.Utils
         /// </summary>
         public static void Reset()
         {
-            lock (_threadLock)
+            lock (ThreadLock)
             {
                 _random = new Random();
-                _pool = $"{SMALL}{BIG}";
+                _pool = $"{Small}{Big}";
             }
         }
 
