@@ -23,9 +23,16 @@ namespace SageTools.Utils
             while (retryCount > 0)
             {
                 retryCount--;
-                res = executeFunc.Invoke();
-                if (breakConditionFunc.Invoke(res)) break;
-                Task.Delay(milliseconds).Wait();
+                try
+                {
+                    res = executeFunc.Invoke();
+                    if (breakConditionFunc.Invoke(res)) break;
+                    Task.Delay(milliseconds).Wait();
+                }
+                catch
+                {
+                    Task.Delay(milliseconds).Wait();
+                }
             }
 
             return res;
@@ -46,9 +53,16 @@ namespace SageTools.Utils
             while (retryCount > 0)
             {
                 retryCount--;
-                res = await executeFunc.Invoke();
-                if (breakConditionFunc.Invoke(res)) break;
-                await Task.Delay(milliseconds);
+                try
+                {
+                    res = await executeFunc.Invoke();
+                    if (breakConditionFunc.Invoke(res)) break;
+                    await Task.Delay(milliseconds);
+                }
+                catch
+                {
+                    Task.Delay(milliseconds).Wait();
+                }
             }
 
             return res;
