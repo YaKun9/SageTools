@@ -1,6 +1,5 @@
 ﻿using SageTools.Extension;
 using System;
-using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -10,54 +9,77 @@ namespace SageTools.Console
     {
         private static void Main(string[] args)
         {
-            var help = args.Any(x => x.Contains("-h"));
-            if (help)
+            if (args.Any(x => x.Contains("-h")))
             {
-                System.Console.WriteLine($"-source= 文件相对路径 {Environment.NewLine}-step= 版本号步长值（整数）{Environment.NewLine}-version= 直接指定版本,忽略-step");
+                ShowHelp();
                 Environment.Exit(0);
             }
-            System.Console.WriteLine("处理xml文件");
-            var source = args.GetArgValue("source");
-            var step = args.GetArgValue("step");
-            var version = args.GetArgValue("version");
 
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, source);
-            if (!File.Exists(path))
-            {
-                System.Console.WriteLine($"执行错误：【{path}】文件不存在");
-                Environment.Exit(-1);
-            }
+            System.Console.WriteLine("**************开始处理**************");
+
+            var source = args.GetArgValue("s");
+            var version = args.GetArgValue("v");
+            var description = args.GetArgValue("d");
+            var copyright = args.GetArgValue("r");
+
+            UpdateXmlValues(source, description, copyright, version);
+
+            System.Console.WriteLine("**************处理完毕**************");
+        }
+
+        private static void ShowHelp()
+        {
+            System.Console.WriteLine();
+            System.Console.WriteLine("使用帮助:");
+            System.Console.WriteLine("-h 查看帮助");
+            System.Console.WriteLine("-s 项目.csproj文件路径");
+            System.Console.WriteLine("-v 指定的版本");
+            System.Console.WriteLine("-d 描述");
+            System.Console.WriteLine("-r 版权描述");
+            System.Console.WriteLine();
+        }
+
+        private static void UpdateXmlValues(string xmlFilePath, string newDescription, string newCopyright, string newVersion)
+        {
             var xmlDoc = new XmlDocument();
-            xmlDoc.Load(path);
-            var versionNode = xmlDoc.DocumentElement?.SelectSingleNode("PropertyGroup")?.SelectSingleNode("Version");
-            if (versionNode.IsNull())
+            xmlDoc.Load(xmlFilePath);
+
+            #region description
+
+            var descriptionNode = xmlDoc.SelectSingleNode("//Description");
+            if (descriptionNode != null && newDescription.IsNotNullOrWhiteSpace())
             {
-                System.Console.WriteLine("执行错误：项目没有配置版本号");
-                Environment.Exit(-1);
+                descriptionNode.InnerText = newDescription;
             }
-            if (version.IsNullOrEmpty())
+
+            #endregion description
+
+            #region copyright
+
+            var copyrightNode = xmlDoc.SelectSingleNode("//Copyright");
+            if (copyrightNode != null && newCopyright.IsNotNullOrWhiteSpace())
             {
-                version = versionNode!.InnerText;
-                var lastNum = version[(version.LastIndexOf(".", StringComparison.Ordinal) + 1)..];
-                var newNum = lastNum.ToInt32() + step;
-                var newVersion = version[..(version.LastIndexOf(".", StringComparison.Ordinal) + 1)] + newNum;
+                copyrightNode.InnerText = newCopyright;
+            }
+
+            #endregion copyright
+
+            #region version
+
+            var versionNode = xmlDoc.SelectSingleNode("//Version");
+            if (versionNode != null && newVersion.IsNotNullOrWhiteSpace())
+            {
                 versionNode.InnerText = newVersion;
-                System.Console.WriteLine($"当前版本{version}，末尾版本号{lastNum}，新版本号{newVersion}");
-            }
-            else
-            {
-                System.Console.WriteLine($"直接指定新版本号为 {version}");
-                versionNode!.InnerText = version;
             }
 
-            var copyright = xmlDoc.DocumentElement?.SelectSingleNode("PropertyGroup")?.SelectSingleNode("Copyright");
-            if (copyright.IsNotNull())
-            {
-                copyright!.InnerText = $"Copyright © LiuDanK 2021-{DateTime.Now.Year}";
-            }
+            #endregion version
 
-            xmlDoc.Save(path);
-            System.Console.WriteLine("处理完毕!");
+            xmlDoc.Save(xmlFilePath);
+            System.Console.WriteLine("**************处理结果**************");
+            System.Console.WriteLine($"文件路径：{xmlFilePath}");
+            System.Console.WriteLine($"版本：{versionNode?.InnerText}");
+            System.Console.WriteLine($"描述：{descriptionNode?.InnerText}");
+            System.Console.WriteLine($"版权：{copyrightNode?.InnerText}");
         }
     }
 }
