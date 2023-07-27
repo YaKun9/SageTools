@@ -51,7 +51,7 @@ namespace SageTools.Extension
         /// <summary>
         /// string.Format()拓展
         /// </summary>
-        public static string Format(this string str, params object[] args) => string.Format(str, args);
+        public static string FormatWith(this string str, params object[] args) => string.Format(str, args);
 
         /// <summary>
         /// string.Join()拓展
