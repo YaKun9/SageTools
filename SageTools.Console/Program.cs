@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SageTools.Extension;
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using SageTools.Extension;
 
 namespace SageTools.Console
 {

@@ -166,7 +166,7 @@ namespace SageTools.Extension
         public static string ToRFC1123String(this DateTime @this, CultureInfo culture) => @this.ToString("r", (IFormatProvider)culture);
 
         /// <summary>
-        /// 获取时间戳
+        /// 获取时间戳(秒)
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
