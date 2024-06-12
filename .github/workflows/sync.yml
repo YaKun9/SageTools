@@ -19,18 +19,28 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Clone Gitea repository
         env:
           GITEA_URL: ${{ secrets.GITEA_URL }}
           GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
           GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
         run: |
-          git clone --mirror https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_URL} gitea_repo
-      - name: Sync changes to GitHub
+          git clone https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_URL} gitea_repo
+
+      - name: Sync changes to GitHub excluding .github directory
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          cd gitea_repo
-          git remote set-url --push origin https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/YaKun9/SageTools.git
-          git push --mirror
+          # Checkout the GitHub repository
+          git clone https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/${{ github.repository }} github_repo
+
+          # Use rsync to sync the code from Gitea repository to GitHub repository, excluding .github directory
+          rsync -av --exclude='.github' gitea_repo/ github_repo/
+
+          # Commit and push changes to GitHub repository
+          cd github_repo
+          git add .
+          git commit -m "Sync from Gitea excluding .github directory"
+          git push origin master
