@@ -1,20 +1,17 @@
-name: Gitea Actions Demo
-run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
+name: Simple Workflow
+
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
-  build:
+  test:
     runs-on: one-runner
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '6.0.x'
-        run: dotnet --info
+      - name: Run a one-liner script
+        run: echo "Hello, World!"
