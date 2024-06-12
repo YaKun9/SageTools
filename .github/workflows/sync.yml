@@ -1,0 +1,46 @@
+name: Sync from Gitea repository
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # 每小时运行一次
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Clone Gitea repository
+        env:
+          GITEA_URL: ${{ secrets.GITEA_URL }}
+          GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        run: |
+          git clone https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_URL} gitea_repo
+
+      - name: Sync changes to GitHub excluding .github directory
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          # Checkout the GitHub repository
+          git clone https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/${{ github.repository }} github_repo
+
+          # Use rsync to sync the code from Gitea repository to GitHub repository, excluding .github directory
+          rsync -av --exclude='.github' gitea_repo/ github_repo/
+
+          # Commit and push changes to GitHub repository
+          cd github_repo
+          git add .
+          git commit -m "Sync from Gitea excluding .github directory"
+          git push origin master
