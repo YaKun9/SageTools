@@ -8,4 +8,7 @@
     <Copyright>Copyright © LiuDanK 2021</Copyright>
     <Version>1.8.6</Version>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 </Project>

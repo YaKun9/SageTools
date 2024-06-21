@@ -6,92 +6,168 @@ namespace SageTools.Extension
     public partial class Extension
     {
         /// <summary>
-        /// 判断时间是否在指定范围内，不包含起止时间
+        ///     判断时间是否在指定范围内，不包含起止时间
         /// </summary>
         /// <param name="this"></param>
         /// <param name="minValue">开始时间</param>
         /// <param name="maxValue">结束时间</param>
         /// <returns></returns>
-        public static bool Between(this DateTime @this, DateTime minValue, DateTime maxValue) => minValue.CompareTo(@this) == -1 && @this.CompareTo(maxValue) == -1;
+        public static bool Between(this DateTime @this, DateTime minValue, DateTime maxValue)
+        {
+            return minValue.CompareTo(@this) == -1 && @this.CompareTo(maxValue) == -1;
+        }
 
         /// <summary>
-        /// 获取对于指定时间节点已经过去了多久
+        ///     获取对于指定时间节点已经过去了多久
         /// </summary>
         /// <param name="datetime"></param>
         /// <returns></returns>
-        public static TimeSpan Elapsed(this DateTime datetime) => DateTime.Now - datetime;
+        public static TimeSpan Elapsed(this DateTime datetime)
+        {
+            return DateTime.Now - datetime;
+        }
 
         /// <summary>
-        /// 获取时间过去了多久 startTime-endTime
+        ///     获取时间过去了多久 startTime-endTime
         /// </summary>
         /// <param name="startTime">开始时间</param>
         /// <param name="endTime">结束时间</param>
         /// <returns></returns>
-        public static TimeSpan Elapsed(this DateTime startTime, DateTime endTime) => startTime - endTime;
+        public static TimeSpan Elapsed(this DateTime startTime, DateTime endTime)
+        {
+            return startTime - endTime;
+        }
 
         /// <summary>
-        /// 获取指定天的结束时间
+        ///     获取指定天的结束时间
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
         public static DateTime EndOfDay(this DateTime @this)
         {
-            DateTime dateTime = new DateTime(@this.Year, @this.Month, @this.Day);
+            var dateTime = new DateTime(@this.Year, @this.Month, @this.Day);
             dateTime = dateTime.AddDays(1.0);
             return dateTime.Subtract(new TimeSpan(0, 0, 0, 0, 1));
         }
 
         /// <summary>
-        /// 获取时间是否在指定范围内,包含起始
+        ///     获取时间是否在指定范围内,包含起始
         /// </summary>
         /// <param name="this"></param>
         /// <param name="minValue"></param>
         /// <param name="maxValue"></param>
         /// <returns></returns>
-        public static bool InRange(this DateTime @this, DateTime minValue, DateTime maxValue) => @this.CompareTo(minValue) >= 0 && @this.CompareTo(maxValue) <= 0;
+        public static bool InRange(this DateTime @this, DateTime minValue, DateTime maxValue)
+        {
+            return @this.CompareTo(minValue) >= 0 && @this.CompareTo(maxValue) <= 0;
+        }
 
         /// <summary>
-        /// 是否是下午
+        ///     是否是下午
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
-        public static bool IsAfternoon(this DateTime @this) => @this.TimeOfDay >= new DateTime(2000, 1, 1, 12, 0, 0).TimeOfDay;
+        public static bool IsAfternoon(this DateTime @this)
+        {
+            return @this.TimeOfDay >= new DateTime(2000, 1, 1, 12, 0, 0).TimeOfDay;
+        }
 
         /// <summary>
-        /// 是否是上午
+        ///     是否是上午
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
-        public static bool IsMorning(this DateTime @this) => @this.TimeOfDay < new DateTime(2000, 1, 1, 12, 0, 0).TimeOfDay;
+        public static bool IsMorning(this DateTime @this)
+        {
+            return @this.TimeOfDay < new DateTime(2000, 1, 1, 12, 0, 0).TimeOfDay;
+        }
 
         /// <summary>
-        /// 是否是当前时间
+        ///     是否是当前时间
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
-        public static bool IsNow(this DateTime @this) => @this == DateTime.Now;
+        public static bool IsNow(this DateTime @this)
+        {
+            return @this == DateTime.Now;
+        }
 
         /// <summary>
-        /// 获取一天的开始时间
+        ///     获取一天的开始时间
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
-        public static DateTime StartOfDay(this DateTime @this) => new DateTime(@this.Year, @this.Month, @this.Day);
-
-        public static string ToLongDateString(this DateTime @this) => @this.ToString("D", (IFormatProvider)DateTimeFormatInfo.CurrentInfo);
-
-        public static string ToLongDateString(this DateTime @this, string culture) => @this.ToString("D", (IFormatProvider)new CultureInfo(culture));
-
-        public static string ToLongDateString(this DateTime @this, CultureInfo culture) => @this.ToString("D", (IFormatProvider)culture);
-
-        public static string ToLongDateTimeString(this DateTime @this) => @this.ToString("F", (IFormatProvider)DateTimeFormatInfo.CurrentInfo);
-
-        public static string ToLongDateTimeString(this DateTime @this, string culture) => @this.ToString("F", (IFormatProvider)new CultureInfo(culture));
-
-        public static string ToLongDateTimeString(this DateTime @this, CultureInfo culture) => @this.ToString("F", (IFormatProvider)culture);
+        public static DateTime StartOfDay(this DateTime @this)
+        {
+            return new DateTime(@this.Year, @this.Month, @this.Day);
+        }
 
         /// <summary>
-        /// 获取相对时间
+        ///     将 DateTime 转换为长日期字符串，使用当前区域信息格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <returns>长日期字符串。</returns>
+        public static string ToLongDateString(this DateTime @this)
+        {
+            return @this.ToString("D", DateTimeFormatInfo.CurrentInfo);
+        }
+
+        /// <summary>
+        ///     将 DateTime 转换为长日期字符串，使用指定文化名称的区域信息格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <param name="culture">指定的文化名称。</param>
+        /// <returns>长日期字符串。</returns>
+        public static string ToLongDateString(this DateTime @this, string culture)
+        {
+            return @this.ToString("D", new CultureInfo(culture));
+        }
+
+        /// <summary>
+        ///     将 DateTime 转换为长日期字符串，使用指定的 CultureInfo 格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <param name="culture">指定的 CultureInfo 对象。</param>
+        /// <returns>长日期字符串。</returns>
+        public static string ToLongDateString(this DateTime @this, CultureInfo culture)
+        {
+            return @this.ToString("D", culture);
+        }
+
+        /// <summary>
+        ///     将 DateTime 转换为长日期时间字符串，使用当前区域信息格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <returns>长日期时间字符串。</returns>
+        public static string ToLongDateTimeString(this DateTime @this)
+        {
+            return @this.ToString("F", DateTimeFormatInfo.CurrentInfo);
+        }
+
+        /// <summary>
+        ///     将 DateTime 转换为长日期时间字符串，使用指定文化名称的区域信息格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <param name="culture">指定的文化名称。</param>
+        /// <returns>长日期时间字符串。</returns>
+        public static string ToLongDateTimeString(this DateTime @this, string culture)
+        {
+            return @this.ToString("F", new CultureInfo(culture));
+        }
+
+        /// <summary>
+        ///     将 DateTime 转换为长日期时间字符串，使用指定的 CultureInfo 格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <param name="culture">指定的 CultureInfo 对象。</param>
+        /// <returns>长日期时间字符串。</returns>
+        public static string ToLongDateTimeString(this DateTime @this, CultureInfo culture)
+        {
+            return @this.ToString("F", culture);
+        }
+        
+        /// <summary>
+        ///     获取相对时间
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="includeTime"></param>
@@ -101,12 +177,21 @@ namespace SageTools.Extension
         /// <returns></returns>
         public static string ToRelativeTime(this DateTime dt, bool includeTime = true, bool asPlusMinus = false, DateTime? compareTo = null, bool includeSign = true)
         {
-            DateTime utcNow = compareTo ?? DateTime.Now;
+            var utcNow = compareTo ?? DateTime.Now;
             return asPlusMinus
-                ? (dt <= utcNow ? ToRelativeTimeSimple(utcNow - dt, includeSign ? "-" : "") : ToRelativeTimeSimple(dt - utcNow, includeSign ? "+" : ""))
-                : (dt <= utcNow ? ToRelativeTimePast(dt, utcNow, includeTime) : ToRelativeTimeFuture(dt, utcNow, includeTime));
+                ? dt <= utcNow ? ToRelativeTimeSimple(utcNow - dt, includeSign ? "-" : "") : ToRelativeTimeSimple(dt - utcNow, includeSign ? "+" : "")
+                : dt <= utcNow
+                    ? ToRelativeTimePast(dt, utcNow, includeTime)
+                    : ToRelativeTimeFuture(dt, utcNow, includeTime);
         }
 
+        /// <summary>
+        ///     将过去的时间转换为相对时间字符串。
+        /// </summary>
+        /// <param name="dt">要转换的 DateTime 对象。</param>
+        /// <param name="utcNow">当前的 UTC 时间。</param>
+        /// <param name="includeTime">是否包含时间信息。</param>
+        /// <returns>相对时间字符串。</returns>
         private static string ToRelativeTimePast(DateTime dt, DateTime utcNow, bool includeTime = true)
         {
             var timeSpan = utcNow - dt;
@@ -114,12 +199,12 @@ namespace SageTools.Extension
             if (totalSeconds < 1.0)
                 return "刚刚";
             if (totalSeconds < 60.0)
-                return timeSpan.Seconds == 1 ? "1秒前" : timeSpan.Seconds.ToString() + "秒前";
+                return timeSpan.Seconds == 1 ? "1秒前" : timeSpan.Seconds + "秒前";
             if (totalSeconds < 3600.0)
-                return timeSpan.Minutes == 1 ? "1分钟前" : timeSpan.Minutes.ToString() + "分钟前";
+                return timeSpan.Minutes == 1 ? "1分钟前" : timeSpan.Minutes + "分钟前";
             if (totalSeconds < 86400.0)
-                return timeSpan.Hours == 1 ? "1小时前" : timeSpan.Hours.ToString() + "小时前";
-            int days = timeSpan.Days;
+                return timeSpan.Hours == 1 ? "1小时前" : timeSpan.Hours + "小时前";
+            var days = timeSpan.Days;
             if (days == 1)
                 return "昨天";
             if (days <= 2)
@@ -127,46 +212,85 @@ namespace SageTools.Extension
             return utcNow.Year == dt.Year ? dt.ToString(includeTime ? "MM-dd HH:mm" : "MM-dd") : dt.ToString(includeTime ? "yyyy-MM-dd HH:mm" : "yyyy-MM-dd");
         }
 
+        /// <summary>
+        ///     将未来的时间转换为相对时间字符串。
+        /// </summary>
+        /// <param name="dt">要转换的 DateTime 对象。</param>
+        /// <param name="utcNow">当前的 UTC 时间。</param>
+        /// <param name="includeTime">是否包含时间信息。</param>
+        /// <returns>相对时间字符串。</returns>
         private static string ToRelativeTimeFuture(DateTime dt, DateTime utcNow, bool includeTime = true)
         {
-            TimeSpan timeSpan = dt - utcNow;
-            double totalSeconds = timeSpan.TotalSeconds;
+            var timeSpan = dt - utcNow;
+            var totalSeconds = timeSpan.TotalSeconds;
             if (totalSeconds < 1.0)
                 return "刚刚";
             if (totalSeconds < 60.0)
-                return timeSpan.Seconds == 1 ? "1秒后" : timeSpan.Seconds.ToString() + "秒后";
+                return timeSpan.Seconds == 1 ? "1秒后" : timeSpan.Seconds + "秒后";
             if (totalSeconds < 3600.0)
-                return timeSpan.Minutes == 1 ? "1分钟后" : timeSpan.Minutes.ToString() + "分钟后";
+                return timeSpan.Minutes == 1 ? "1分钟后" : timeSpan.Minutes + "分钟后";
             if (totalSeconds < 86400.0)
-                return timeSpan.Hours == 1 ? "1小时后" : timeSpan.Hours.ToString() + "小时后";
-            int num = (int)Math.Round(timeSpan.TotalDays, 0);
+                return timeSpan.Hours == 1 ? "1小时后" : timeSpan.Hours + "小时后";
+            var num = (int)Math.Round(timeSpan.TotalDays, 0);
             if (num == 1)
                 return "明天";
             if (num <= 10)
-                return num.ToString() + "天后" + (num > 1 ? "s" : "");
+                return num + "天后" + (num > 1 ? "s" : "");
             return utcNow.Year == dt.Year ? dt.ToString(includeTime ? "MM-dd HH:mm" : "MM-dd") : dt.ToString(includeTime ? "yyyy-MM-dd HH:mm" : "yyyy-MM-dd");
         }
 
+        /// <summary>
+        ///     将时间跨度转换为简单的相对时间字符串。
+        /// </summary>
+        /// <param name="ts">要转换的 TimeSpan 对象。</param>
+        /// <param name="sign">表示时间方向的符号，"-" 表示过去，"+" 表示未来。</param>
+        /// <returns>相对时间字符串。</returns>
         private static string ToRelativeTimeSimple(TimeSpan ts, string sign)
         {
-            double totalSeconds = ts.TotalSeconds;
+            var totalSeconds = ts.TotalSeconds;
             if (totalSeconds < 1.0)
                 return "1秒前";
             if (totalSeconds < 60.0)
-                return sign + ts.Seconds.ToString() + "秒";
+                return sign + ts.Seconds + "秒";
             if (totalSeconds < 3600.0)
-                return sign + ts.Minutes.ToString() + "分钟";
-            return totalSeconds < 86400.0 ? sign + ts.Hours.ToString() + "小时" : ts.Days.ToString() + "天" + (sign == "-" ? "前" : "后");
+                return sign + ts.Minutes + "分钟";
+            return totalSeconds < 86400.0 ? sign + ts.Hours + "小时" : ts.Days + "天" + (sign == "-" ? "前" : "后");
         }
 
-        public static string ToRFC1123String(this DateTime @this) => @this.ToString("r", (IFormatProvider)DateTimeFormatInfo.CurrentInfo);
-
-        public static string ToRFC1123String(this DateTime @this, string culture) => @this.ToString("r", (IFormatProvider)new CultureInfo(culture));
-
-        public static string ToRFC1123String(this DateTime @this, CultureInfo culture) => @this.ToString("r", (IFormatProvider)culture);
+        /// <summary>
+        ///     将 DateTime 转换为 RFC1123 格式的字符串，使用当前区域信息格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <returns>RFC1123 格式的字符串。</returns>
+        public static string ToRFC1123String(this DateTime @this)
+        {
+            return @this.ToString("r", DateTimeFormatInfo.CurrentInfo);
+        }
 
         /// <summary>
-        /// 获取时间戳(秒)
+        ///     将 DateTime 转换为 RFC1123 格式的字符串，使用指定文化名称的区域信息格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <param name="culture">指定的文化名称。</param>
+        /// <returns>RFC1123 格式的字符串。</returns>
+        public static string ToRFC1123String(this DateTime @this, string culture)
+        {
+            return @this.ToString("r", new CultureInfo(culture));
+        }
+
+        /// <summary>
+        ///     将 DateTime 转换为 RFC1123 格式的字符串，使用指定的 CultureInfo 格式化。
+        /// </summary>
+        /// <param name="this">要转换的 DateTime 对象。</param>
+        /// <param name="culture">指定的 CultureInfo 对象。</param>
+        /// <returns>RFC1123 格式的字符串。</returns>
+        public static string ToRFC1123String(this DateTime @this, CultureInfo culture)
+        {
+            return @this.ToString("r", culture);
+        }
+        
+        /// <summary>
+        ///     获取时间戳(秒)
         /// </summary>
         /// <param name="this"></param>
         /// <returns></returns>
@@ -176,7 +300,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        /// 时间戳转时间(秒)
+        ///     时间戳转时间(秒)
         /// </summary>
         /// <param name="timeStamp">时间戳(秒)</param>
         /// <returns></returns>
@@ -186,8 +310,11 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///  转换为日期格式
+        ///     转换为日期格式
         /// </summary>
-        public static DateTime ToDateTime(this string @this) => Convert.ToDateTime(@this);
+        public static DateTime ToDateTime(this string @this)
+        {
+            return Convert.ToDateTime(@this);
+        }
     }
 }
