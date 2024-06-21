@@ -1,0 +1,36 @@
+name: Sync from Gitea repository
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # 每小时运行一次
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Clone Gitea repository
+        env:
+          GITEA_URL: ${{ secrets.GITEA_URL }}
+          GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        run: |
+          git clone --mirror https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_URL} gitea_repo
+      - name: Sync changes to GitHub
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          cd gitea_repo
+          git remote set-url --push origin https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/YaKun9/SageTools.git
+          git push --mirror

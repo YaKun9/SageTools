@@ -1,0 +1,65 @@
+name: Build and Publish to NuGet
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Extract version from release tag
+        id: extract_version
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          VERSION=${VERSION#v}
+          echo "::set-output name=VERSION::${VERSION}"
+      - name: Restore dependencies
+        run: dotnet restore SageTools/SageTools.csproj
+
+      - name: Build project
+        run: dotnet build SageTools/SageTools.csproj --configuration Release --no-restore /p:Version=${{ steps.extract_version.outputs.VERSION }}
+
+      - name: Run tests
+        run: dotnet test SageTools/SageTools.csproj --no-build --verbosity normal
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Extract version from release tag
+        id: extract_version
+        run: |
+          VERSION=${{ github.event.release.tag_name }}
+          VERSION=${VERSION#v}
+          echo "::set-output name=VERSION::${VERSION}"
+      - name: Restore dependencies
+        run: dotnet restore SageTools/SageTools.csproj
+
+      - name: Build project
+        run: dotnet build SageTools/SageTools.csproj --configuration Release --no-restore /p:Version=${{ steps.extract_version.outputs.VERSION }}
+
+      - name: Pack project
+        run: |
+          DESCRIPTION="${{ github.event.release.body }}"
+          dotnet pack SageTools/SageTools.csproj --configuration Release --no-build --output ./output /p:Version=${{ steps.extract_version.outputs.VERSION }} /p:PackageReleaseNotes="${DESCRIPTION}"
+      - name: Publish to NuGet
+        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

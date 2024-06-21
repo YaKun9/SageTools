@@ -1,0 +1,69 @@
+name: 手动构建并发布到Nuget
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to be published'
+        required: true
+        default: '1.0.0'
+      description:
+        description: 'Release notes for this version'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set version from input
+        id: set_version
+        run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Restore dependencies
+        run: dotnet restore SageTools/SageTools.csproj
+
+      - name: Build project
+        run: dotnet build SageTools/SageTools.csproj --configuration Release --no-restore /p:Version=${{ env.VERSION }}
+
+      - name: Run tests
+        run: dotnet test SageTools/SageTools.csproj --no-build --verbosity normal
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Set version from input
+        id: set_version
+        run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Restore dependencies
+        run: dotnet restore SageTools/SageTools.csproj
+
+      - name: Build project
+        run: dotnet build SageTools/SageTools.csproj --configuration Release --no-restore /p:Version=${{ env.VERSION }}
+
+      - name: Pack project
+        run: |
+          DESCRIPTION="${{ github.event.inputs.description || 'No release notes provided' }}"
+          dotnet pack SageTools/SageTools.csproj --configuration Release --no-build --output ./output /p:Version=${{ env.VERSION }} /p:PackageReleaseNotes="${DESCRIPTION}"
+
+      - name: Publish to NuGet
+        run: dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

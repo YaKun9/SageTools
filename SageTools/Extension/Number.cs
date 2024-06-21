@@ -104,8 +104,5 @@ namespace SageTools.Extension
         {
             return num == 1;
         }
-
-
-
     }
 }
