@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 
 namespace SageTools.Extension
@@ -51,7 +49,7 @@ namespace SageTools.Extension
         /// <typeparam name="T">要克隆的对象类型。</typeparam>
         /// <param name="source">要克隆的对象。</param>
         /// <returns>克隆后的新对象。</returns>
-        public static T DeepCloneV1<T>(this T source)
+        public static T DeepClone<T>(this T source)
         {
             // 如果对象为 null，则返回 null
             if (source == null)
@@ -60,22 +58,6 @@ namespace SageTools.Extension
             var serialized = JsonConvert.SerializeObject(source);
             return JsonConvert.DeserializeObject<T>(serialized);
         }
-
-        /// <summary>
-        ///     使用 BinaryFormatter 实现对象的深克隆。(推荐)
-        /// </summary>
-        /// <typeparam name="T">要克隆的对象类型。</typeparam>
-        /// <param name="source">要克隆的对象。</param>
-        /// <returns>克隆后的新对象。</returns>
-        public static T DeepCloneV2<T>(this T source)
-        {
-            if (source == null)
-                return default;
-            using var stream = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, source);
-            stream.Seek(0, SeekOrigin.Begin);
-            return (T)formatter.Deserialize(stream);
-        }
     }
+
 }
