@@ -1,4 +1,4 @@
-name: Sync from Gitea repository
+name: 从上游Gitea仓库同步更新
 
 on:
   schedule:
@@ -25,7 +25,7 @@ jobs:
           GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
           GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
         run: |
-          git clone --mirror https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_URL} gitea_repo
+          git clone --bare https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_URL} gitea_repo
       - name: Sync changes to GitHub
         env:
           GITHUB_ACTOR: ${{ github.actor }}
@@ -33,4 +33,5 @@ jobs:
         run: |
           cd gitea_repo
           git remote set-url --push origin https://${GITHUB_ACTOR}:${GH_TOKEN}@github.com/YaKun9/SageTools.git
-          git push --mirror
+          git fetch --all
+          git push --force --all
