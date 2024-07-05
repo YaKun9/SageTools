@@ -13,7 +13,7 @@ namespace SageTools.Extension
     public static partial class Extension
     {
         /// <summary>
-        ///     判断字符串是否为 null 或空字符串。
+        /// 判断字符串是否为 null 或空字符串。
         /// </summary>
         /// <param name="str">要检查的字符串。</param>
         /// <returns>如果字符串为 null 或空字符串，则返回 true；否则返回 false。</returns>
@@ -23,7 +23,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     判断字符串是否为 null、空字符串或仅包含空白字符。
+        /// 判断字符串是否为 null、空字符串或仅包含空白字符。
         /// </summary>
         /// <param name="str">要检查的字符串。</param>
         /// <returns>如果字符串为 null、空字符串或仅包含空白字符，则返回 true；否则返回 false。</returns>
@@ -33,7 +33,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     判断字符串是否不为 null 且不为空字符串。
+        /// 判断字符串是否不为 null 且不为空字符串。
         /// </summary>
         /// <param name="str">要检查的字符串。</param>
         /// <returns>如果字符串不为 null 且不为空字符串，则返回 true；否则返回 false。</returns>
@@ -43,7 +43,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     判断字符串是否不为 null、空字符串或仅包含空白字符。
+        /// 判断字符串是否不为 null、空字符串或仅包含空白字符。
         /// </summary>
         /// <param name="str">要检查的字符串。</param>
         /// <returns>如果字符串不为 null、空字符串或仅包含空白字符，则返回 true；否则返回 false。</returns>
@@ -51,15 +51,16 @@ namespace SageTools.Extension
         {
             return !str.IsNullOrWhiteSpace();
         }
-        
+
         /// <summary>
-        ///     字符串转布尔
+        /// 字符串转布尔
         /// </summary>
         /// <param name="str">True=是/true/True/1 其他值均为false</param>
         /// <returns></returns>
         public static bool ToBool(this string str)
         {
-            if (str.IsNullOrEmpty()) return false;
+            if (str.IsNullOrEmpty())
+                return false;
             var trueStrList = new List<string>
             {
                 "是", "true", "True", "1"
@@ -68,7 +69,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Format()拓展
+        /// string.Format()拓展
         /// </summary>
         public static string FormatWith(this string str, params object[] args)
         {
@@ -76,7 +77,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Join()拓展
+        /// string.Join()拓展
         /// </summary>
         public static string JoinWith(this string separator, string[] value)
         {
@@ -84,7 +85,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Join()拓展
+        /// string.Join()拓展
         /// </summary>
         public static string JoinWith(this string separator, object[] values)
         {
@@ -92,7 +93,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Join()拓展
+        /// string.Join()拓展
         /// </summary>
         public static string JoinWith<T>(this string separator, IEnumerable<T> values)
         {
@@ -100,7 +101,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Join()拓展
+        /// string.Join()拓展
         /// </summary>
         public static string JoinWith(this string separator, IEnumerable<string> values)
         {
@@ -108,7 +109,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Join()拓展
+        /// string.Join()拓展
         /// </summary>
         public static string JoinWith(this string separator, string[] value, int startIndex, int count)
         {
@@ -116,7 +117,15 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string.Replace("oldValue","")
+        /// string.Join()拓展
+        /// </summary>
+        public static string JoinWith(this IEnumerable<string> value, string separator)
+        {
+            return string.Join(separator, value);
+        }
+
+        /// <summary>
+        /// string.Replace("oldValue","")
         /// </summary>
         public static string ReplaceByEmpty(this string str, params string[] values)
         {
@@ -124,7 +133,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     保存为文件
+        /// 保存为文件
         /// </summary>
         public static void SaveAsFile(this string @this, string fileName, bool append = false)
         {
@@ -133,7 +142,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     保存为文件
+        /// 保存为文件
         /// </summary>
         public static void SaveAsFile(this string @this, FileInfo file, bool append = false)
         {
@@ -142,7 +151,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     将数据库类型转换为C#类型
+        /// 将数据库类型转换为C#类型
         /// </summary>
         public static SqlDbType SqlTypeNameToSqlDbType(this string @this)
         {
@@ -256,7 +265,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     拼接URL
+        /// 拼接URL
         /// </summary>
         /// <param name="host">host地址</param>
         /// <param name="url">链接</param>
@@ -281,7 +290,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     解码 HTML 编码的字符串。
+        /// 解码 HTML 编码的字符串。
         /// </summary>
         /// <param name="s">要解码的字符串。</param>
         /// <returns>解码后的字符串。</returns>
@@ -291,7 +300,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     解码 HTML 编码的字符串并将结果写入 TextWriter。
+        /// 解码 HTML 编码的字符串并将结果写入 TextWriter。
         /// </summary>
         /// <param name="s">要解码的字符串。</param>
         /// <param name="output">用于接收解码后结果的 TextWriter。</param>
@@ -301,7 +310,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     对字符串进行 HTML 编码。
+        /// 对字符串进行 HTML 编码。
         /// </summary>
         /// <param name="s">要编码的字符串。</param>
         /// <returns>编码后的字符串。</returns>
@@ -311,7 +320,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     对字符串进行 HTML 编码并将结果写入 TextWriter。
+        /// 对字符串进行 HTML 编码并将结果写入 TextWriter。
         /// </summary>
         /// <param name="s">要编码的字符串。</param>
         /// <param name="output">用于接收编码后结果的 TextWriter。</param>
@@ -321,7 +330,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     解码 URL 编码的字符串。
+        /// 解码 URL 编码的字符串。
         /// </summary>
         /// <param name="str">要解码的字符串。</param>
         /// <returns>解码后的字符串。</returns>
@@ -331,7 +340,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     使用指定的编码解码 URL 编码的字符串。
+        /// 使用指定的编码解码 URL 编码的字符串。
         /// </summary>
         /// <param name="str">要解码的字符串。</param>
         /// <param name="e">指定的编码。</param>
@@ -342,7 +351,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     对字符串进行 URL 编码。
+        /// 对字符串进行 URL 编码。
         /// </summary>
         /// <param name="str">要编码的字符串。</param>
         /// <returns>编码后的字符串。</returns>
@@ -352,7 +361,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     使用指定的编码对字符串进行 URL 编码。
+        /// 使用指定的编码对字符串进行 URL 编码。
         /// </summary>
         /// <param name="str">要编码的字符串。</param>
         /// <param name="e">指定的编码。</param>
@@ -362,9 +371,8 @@ namespace SageTools.Extension
             return HttpUtility.UrlEncode(str, e);
         }
 
-
         /// <summary>
-        ///     截取字符串，多余部分以...结尾
+        /// 截取字符串，多余部分以...结尾
         /// </summary>
         public static string Cut(this string @this, int maxLength)
         {
@@ -375,7 +383,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     截取字符串，多余部分以指定内容结尾
+        /// 截取字符串，多余部分以指定内容结尾
         /// </summary>
         public static string Cut(this string @this, int maxLength, string suffix)
         {
@@ -386,7 +394,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     满足条件则添加
+        /// 满足条件则添加
         /// </summary>
         public static StringBuilder AppendIf<T>(this StringBuilder @this, Func<T, bool> predicate, params T[] values)
         {
@@ -398,7 +406,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     满足条件则添加
+        /// 满足条件则添加
         /// </summary>
         public static StringBuilder AppendLineIf<T>(this StringBuilder @this, Func<T, bool> predicate, params T[] values)
         {
@@ -410,7 +418,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     追加一行,并string.Format()
+        /// 追加一行,并string.Format()
         /// </summary>
         public static StringBuilder AppendLineFormat(this StringBuilder @this, string format, params object[] args)
         {
@@ -419,7 +427,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     追加一行,并string.Format()
+        /// 追加一行,并string.Format()
         /// </summary>
         public static StringBuilder AppendLineFormat(this StringBuilder @this, string format, List<IEnumerable<object>> args)
         {
@@ -428,7 +436,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     从左截取指定字符，超出长度则截取到末尾
+        /// 从左截取指定字符，超出长度则截取到末尾
         /// </summary>
         public static string LeftSafe(this string @this, int length)
         {
@@ -436,7 +444,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     从左截取指定字符，超出长度则截取到末尾
+        /// 从左截取指定字符，超出长度则截取到末尾
         /// </summary>
         public static string Left(this string @this, int length)
         {
@@ -444,7 +452,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     从右截取指定字符，超出长度则截取到开头
+        /// 从右截取指定字符，超出长度则截取到开头
         /// </summary>
         public static string RightSafe(this string @this, int length)
         {
@@ -452,7 +460,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     从右截取指定字符，超出长度则截取到开头
+        /// 从右截取指定字符，超出长度则截取到开头
         /// </summary>
         public static string Right(this string @this, int length)
         {
@@ -460,7 +468,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转为字节数组
+        /// 转为字节数组
         /// </summary>
         /// <param name="base64Str">base64字符串</param>
         /// <returns></returns>
@@ -470,7 +478,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转换为MD5加密后的字符串（默认加密为32位）
+        /// 转换为MD5加密后的字符串（默认加密为32位）
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -481,7 +489,8 @@ namespace SageTools.Extension
             var hashBytes = md5.ComputeHash(inputBytes);
 
             var sb = new StringBuilder();
-            foreach (var t in hashBytes) sb.Append(t.ToString("x2"));
+            foreach (var t in hashBytes)
+                sb.Append(t.ToString("x2"));
 
             md5.Dispose();
 
@@ -489,7 +498,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转换为MD5加密后的字符串（16位）
+        /// 转换为MD5加密后的字符串（16位）
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -499,8 +508,8 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     Base64加密
-        ///     注:默认采用UTF8编码
+        /// Base64加密
+        /// 注:默认采用UTF8编码
         /// </summary>
         /// <param name="source">待加密的明文</param>
         /// <returns>加密后的字符串</returns>
@@ -510,7 +519,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     Base64加密
+        /// Base64加密
         /// </summary>
         /// <param name="source">待加密的明文</param>
         /// <param name="encoding">加密采用的编码方式</param>
@@ -532,8 +541,8 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     Base64解密
-        ///     注:默认使用UTF8编码
+        /// Base64解密
+        /// 注:默认使用UTF8编码
         /// </summary>
         /// <param name="result">待解密的密文</param>
         /// <returns>解密后的字符串</returns>
@@ -543,7 +552,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     Base64解密
+        /// Base64解密
         /// </summary>
         /// <param name="result">待解密的密文</param>
         /// <param name="encoding">解密采用的编码方式，注意和加密时采用的方式一致</param>
@@ -565,7 +574,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     Base64Url编码
+        /// Base64Url编码
         /// </summary>
         /// <param name="text">待编码的文本字符串</param>
         /// <returns>编码的文本字符串</returns>
@@ -578,7 +587,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     Base64Url解码
+        /// Base64Url解码
         /// </summary>
         /// <param name="base64UrlStr">使用Base64Url编码后的字符串</param>
         /// <returns>解码后的内容</returns>
@@ -602,8 +611,8 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     计算SHA1摘要
-        ///     注：默认使用UTF8编码
+        /// 计算SHA1摘要
+        /// 注：默认使用UTF8编码
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns></returns>
@@ -613,7 +622,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     计算SHA1摘要
+        /// 计算SHA1摘要
         /// </summary>
         /// <param name="str">字符串</param>
         /// <param name="encoding">编码</param>
@@ -628,8 +637,8 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转为SHA1哈希加密字符串
-        ///     注：默认使用UTF8编码
+        /// 转为SHA1哈希加密字符串
+        /// 注：默认使用UTF8编码
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns></returns>
@@ -639,7 +648,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转为SHA1哈希
+        /// 转为SHA1哈希
         /// </summary>
         /// <param name="str">字符串</param>
         /// <param name="encoding">编码</param>
@@ -652,7 +661,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     SHA256加密
+        /// SHA256加密
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns></returns>
@@ -662,13 +671,14 @@ namespace SageTools.Extension
             var hash = SHA256.Create().ComputeHash(bytes);
 
             var builder = new StringBuilder();
-            foreach (var t in hash) builder.Append(t.ToString("x2"));
+            foreach (var t in hash)
+                builder.Append(t.ToString("x2"));
 
             return builder.ToString();
         }
 
         /// <summary>
-        ///     HMACSHA256算法
+        /// HMACSHA256算法
         /// </summary>
         /// <param name="text">内容</param>
         /// <param name="secret">密钥</param>
@@ -684,7 +694,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     二进制字符串转为Int
+        /// 二进制字符串转为Int
         /// </summary>
         /// <param name="str">二进制字符串</param>
         /// <returns></returns>
@@ -694,7 +704,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     将16进制字符串转为Int
+        /// 将16进制字符串转为Int
         /// </summary>
         /// <param name="str">数值</param>
         /// <returns></returns>
@@ -704,7 +714,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     string转byte[]
+        /// string转byte[]
         /// </summary>
         /// <param name="str">字符串</param>
         /// <param name="theEncoding">需要的编码</param>
@@ -715,7 +725,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     json数据转实体类,仅仅应用于单个实体类，速度非常快
+        /// json数据转实体类,仅仅应用于单个实体类，速度非常快
         /// </summary>
         /// <typeparam name="T">泛型参数</typeparam>
         /// <param name="json">json字符串</param>
@@ -757,7 +767,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转为首字母大写
+        /// 转为首字母大写
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns></returns>
@@ -767,7 +777,7 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        ///     转为首字母小写
+        /// 转为首字母小写
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns></returns>
@@ -776,9 +786,8 @@ namespace SageTools.Extension
             return str[..1].ToLower() + str[1..];
         }
 
-
         /// <summary>
-        ///     将枚举类型的文本转为枚举类型
+        /// 将枚举类型的文本转为枚举类型
         /// </summary>
         /// <typeparam name="TEnum">枚举类型</typeparam>
         /// <param name="enumText">枚举文本</param>
