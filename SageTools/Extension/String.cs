@@ -125,6 +125,14 @@ namespace SageTools.Extension
         }
 
         /// <summary>
+        /// string.Join()拓展
+        /// </summary>
+        public static string JoinWith(this IEnumerable<char> value, string separator)
+        {
+            return string.Join(separator, value);
+        }
+
+        /// <summary>
         /// string.Replace("oldValue","")
         /// </summary>
         public static string ReplaceByEmpty(this string str, params string[] values)
@@ -717,11 +725,11 @@ namespace SageTools.Extension
         /// string转byte[]
         /// </summary>
         /// <param name="str">字符串</param>
-        /// <param name="theEncoding">需要的编码</param>
+        /// <param name="encoding">需要的编码</param>
         /// <returns></returns>
-        public static byte[] ToBytes(this string str, Encoding theEncoding)
+        public static byte[] ToBytes(this string str, Encoding encoding)
         {
-            return theEncoding.GetBytes(str);
+            return encoding.GetBytes(str);
         }
 
         /// <summary>
@@ -797,6 +805,31 @@ namespace SageTools.Extension
             Enum.TryParse(enumText, out TEnum value);
 
             return value;
+        }
+
+        /// <summary>
+        /// 将布尔值转换为字符串表示。
+        /// </summary>
+        /// <param name="bl">布尔值。</param>
+        /// <param name="trueStr">布尔值为 true 时的字符串表示，默认为 "是"。</param>
+        /// <param name="falseStr">布尔值为 false 时的字符串表示，默认为 "否"。</param>
+        /// <returns>根据布尔值返回相应的字符串表示。</returns>
+        public static string ToStringView(this bool bl, string trueStr = "是", string falseStr = "否")
+        {
+            return bl ? trueStr : falseStr;
+        }
+
+        /// <summary>
+        /// 将可空布尔值转换为字符串表示。
+        /// </summary>
+        /// <param name="bl">可空布尔值。</param>
+        /// <param name="trueStr">布尔值为 true 时的字符串表示，默认为 "是"。</param>
+        /// <param name="falseStr">布尔值为 false 时的字符串表示，默认为 "否"。</param>
+        /// <param name="nullStr">布尔值为 null 时的字符串表示，默认为空字符串。</param>
+        /// <returns>根据可空布尔值返回相应的字符串表示。</returns>
+        public static string ToStringView(this bool? bl, string trueStr = "是", string falseStr = "否", string nullStr = "")
+        {
+            return bl.HasValue ? bl.Value ? trueStr : falseStr : nullStr;
         }
     }
 }
