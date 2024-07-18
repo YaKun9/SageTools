@@ -12,7 +12,8 @@ namespace SageTools.Extension
         /// </summary>
         public static bool IsNullOrEmpty<T>(this ICollection<T> list)
         {
-            if (list == null) return true;
+            if (list == null)
+                return true;
             return !list.Any();
         }
 
@@ -113,28 +114,21 @@ namespace SageTools.Extension
         }
 
         /// <summary>
-        /// 页码转偏移量;拒绝大量 pageIndex-1
+        /// 对集合中的每个元素执行指定的操作。
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public static int PageIndexToOffset(this int pageIndex, int pageSize)
+        /// <typeparam name="T">集合中元素的类型。</typeparam>
+        /// <param name="list">要操作的集合。</param>
+        /// <param name="action">要对集合中的每个元素执行的操作。操作接受集合和当前元素的索引作为参数。</param>
+        public static void ForEach<T>(this ICollection<T> list, Action<ICollection<T>, int> action)
         {
-            return (pageIndex - 1) * pageSize;
-        }
-
-        /// <summary>
-        /// 计算分页页数
-        /// </summary>
-        /// <param name="totalCount">总条数</param>
-        /// <param name="pageSize">页大小</param>
-        /// <returns></returns>
-        public static int ToPageCount(this int totalCount, int pageSize)
-        {
-            if (totalCount == 0 || pageSize == 0) return 0;
-            if (totalCount <= pageSize) return 1;
-            if (pageSize == 1) return totalCount;
-            return (int)Math.Ceiling(1D * totalCount / pageSize);
+            if (list.IsNullOrEmpty())
+            {
+                return;
+            }
+            for (var i = 0; i < list.Count; i++)
+            {
+                action(list, i);
+            }
         }
     }
 }

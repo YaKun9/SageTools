@@ -15,7 +15,7 @@ namespace SageTools.Extension
             {
                 throw new ArgumentOutOfRangeException(nameof(arabNum), $"取值应在0~9，当前为{arabNum}");
             }
-            var chineseChars = new[] {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
+            var chineseChars = new[] { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九" };
             return chineseChars[arabNum];
         }
 
@@ -27,7 +27,8 @@ namespace SageTools.Extension
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
         public static short ToInt16(this object obj, short defaultValue = 0)
         {
-            if (obj.IsNull()) return defaultValue;
+            if (obj.IsNull())
+                return defaultValue;
             short.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
@@ -40,7 +41,8 @@ namespace SageTools.Extension
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
         public static int ToInt32(this object obj, int defaultValue = 0)
         {
-            if (obj.IsNull()) return defaultValue;
+            if (obj.IsNull())
+                return defaultValue;
             int.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
@@ -53,7 +55,8 @@ namespace SageTools.Extension
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
         public static long ToInt64(this object obj, long defaultValue = 0)
         {
-            if (obj.IsNull()) return defaultValue;
+            if (obj.IsNull())
+                return defaultValue;
             long.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
@@ -66,7 +69,8 @@ namespace SageTools.Extension
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
         public static float ToSingle(this object obj, float defaultValue = 0)
         {
-            if (obj.IsNull()) return defaultValue;
+            if (obj.IsNull())
+                return defaultValue;
             float.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
@@ -79,7 +83,8 @@ namespace SageTools.Extension
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
         public static double ToDouble(this object obj, double defaultValue = 0)
         {
-            if (obj.IsNull()) return defaultValue;
+            if (obj.IsNull())
+                return defaultValue;
             double.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
@@ -92,7 +97,8 @@ namespace SageTools.Extension
         /// <returns>转换后的值，失败时返回指定的默认值</returns>
         public static decimal ToDecimal(this object obj, decimal defaultValue = 0)
         {
-            if (obj.IsNull()) return defaultValue;
+            if (obj.IsNull())
+                return defaultValue;
             decimal.TryParse(obj.ToString(), out defaultValue);
             return defaultValue;
         }
@@ -103,6 +109,34 @@ namespace SageTools.Extension
         public static bool ToBool(this int num)
         {
             return num == 1;
+        }
+
+        /// <summary>
+        /// 页码转偏移量;拒绝大量 pageIndex-1
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public static int PageIndexToOffset(this int pageIndex, int pageSize)
+        {
+            return (pageIndex - 1) * pageSize;
+        }
+
+        /// <summary>
+        /// 计算分页页数
+        /// </summary>
+        /// <param name="totalCount">总条数</param>
+        /// <param name="pageSize">页大小</param>
+        /// <returns></returns>
+        public static int ToPageCount(this int totalCount, int pageSize)
+        {
+            if (totalCount == 0 || pageSize == 0)
+                return 0;
+            if (totalCount <= pageSize)
+                return 1;
+            if (pageSize == 1)
+                return totalCount;
+            return (int)Math.Ceiling(1D * totalCount / pageSize);
         }
     }
 }
