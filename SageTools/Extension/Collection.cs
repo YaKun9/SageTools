@@ -118,16 +118,20 @@ namespace SageTools.Extension
         /// </summary>
         /// <typeparam name="T">集合中元素的类型。</typeparam>
         /// <param name="list">要操作的集合。</param>
-        /// <param name="action">要对集合中的每个元素执行的操作。操作接受集合和当前元素的索引作为参数。</param>
-        public static void ForEach<T>(this ICollection<T> list, Action<ICollection<T>, int> action)
+        /// <param name="action">
+        /// 要对集合中的每个元素执行的操作。操作接受两个参数：
+        /// 第一个参数是当前元素的索引（int），第二个参数是当前元素（T）。
+        /// </param>
+        public static void ForEach<T>(this IList<T> list, Action<int, T> action)
         {
             if (list.IsNullOrEmpty())
             {
                 return;
             }
+
             for (var i = 0; i < list.Count; i++)
             {
-                action(list, i);
+                action(i, list[i]);
             }
         }
     }
