@@ -6,17 +6,14 @@ steps:
 - name: restore
   image: mcr.microsoft.com/dotnet/sdk:8.0
   commands:
-  - cd Backend
   - dotnet restore
 
 - name: build
   image: mcr.microsoft.com/dotnet/sdk:8.0
   commands:
-  - cd Backend
   - dotnet build --configuration Release
 
 - name: test
   image: mcr.microsoft.com/dotnet/sdk:8.0
   commands:
-  - cd Backend
   - dotnet test --no-build --verbosity normal
